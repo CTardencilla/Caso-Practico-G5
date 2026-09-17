@@ -8,7 +8,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 
@@ -19,6 +24,13 @@ public class LoginController {
 
     @FXML
     private PasswordField txtPassword;
+
+    @FXML
+    public void detectarEnter(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            iniciarSesion();
+        }
+    }
 
     @FXML
     public void iniciarSesion() {

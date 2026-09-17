@@ -21,7 +21,7 @@
          </image>
       </ImageView>
       <TextField fx:id="txtUsuario" layoutX="97.0" layoutY="160.0" promptText="Ingrese su usuario" style="-fx-background-color: transparent; -fx-background-radius: 2; -fx-padding: 10;" />
-      <PasswordField fx:id="txtPassword" layoutX="97.0" layoutY="214.0" promptText="Ingrese su contraseña" style="-fx-background-color: transparent; -fx-background-radius: 2; -fx-padding: 10;" />
+      <PasswordField fx:id="txtPassword" onKeyPressed="#detectarEnter" layoutX="97.0" layoutY="214.0" promptText="Ingrese su contraseña" style="-fx-background-color: transparent; -fx-background-radius: 2; -fx-padding: 10;" />
       <ImageView fitHeight="64.0" fitWidth="65.0" layoutX="115.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/usuario.png" />
