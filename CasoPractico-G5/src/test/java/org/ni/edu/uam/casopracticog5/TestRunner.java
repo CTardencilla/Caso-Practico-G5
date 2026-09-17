@@ -71,6 +71,9 @@ public class TestRunner {
         // 9. Probar Panel de Administración de Usuarios (RBAC y CRUD)
         testAdminUsuarios();
 
+        // 10. Probar Dashboard y Clientes Iniciales Solicitados
+        testDashboardYClientesIniciales();
+
         System.out.println("\n==================================================");
         System.out.println("  RESUMEN DE PRUEBAS:");
         System.out.println("  Total pruebas: " + testsRun);
@@ -772,6 +775,82 @@ public class TestRunner {
 
         } catch (Exception e) {
             findings.add("Error en testAdminUsuarios: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private static void testDashboardYClientesIniciales() {
+        System.out.println("\n--- 10. Pruebas de Dashboard y Clientes Iniciales ---");
+        try {
+            // 10.1: Verificación de los 4 clientes iniciales requeridos
+            ObservableList<Cliente> clientes = DataStore.getClientes();
+            check("Clientes Iniciales: DataStore contiene al menos 4 clientes iniciales",
+                    clientes != null && clientes.size() >= 4,
+                    "Se esperaban al menos 4 clientes iniciales en DataStore.");
+
+            boolean tieneWilliam = clientes.stream().anyMatch(c ->
+                    c.toString().equalsIgnoreCase("William Antonio Garcia Garcia"));
+            check("Clientes Iniciales: 'William Antonio Garcia Garcia' registrado",
+                    tieneWilliam,
+                    "No se encontró el cliente 'William Antonio Garcia Garcia'.");
+
+            boolean tieneAndres = clientes.stream().anyMatch(c ->
+                    c.toString().equalsIgnoreCase("Andres Sebastian Gonzalez Maradiaga"));
+            check("Clientes Iniciales: 'Andres Sebastian Gonzalez Maradiaga' registrado",
+                    tieneAndres,
+                    "No se encontró el cliente 'Andres Sebastian Gonzalez Maradiaga'.");
+
+            boolean tieneRafael = clientes.stream().anyMatch(c ->
+                    c.toString().equalsIgnoreCase("Rafael Hernandez Sanchez"));
+            check("Clientes Iniciales: 'Rafael Hernandez Sanchez' registrado",
+                    tieneRafael,
+                    "No se encontró el cliente 'Rafael Hernandez Sanchez'.");
+
+            boolean tieneCaleb = clientes.stream().anyMatch(c ->
+                    c.toString().equalsIgnoreCase("Caleb Jordan Tardencilla Alvarado"));
+            check("Clientes Iniciales: 'Caleb Jordan Tardencilla Alvarado' registrado",
+                    tieneCaleb,
+                    "No se encontró el cliente 'Caleb Jordan Tardencilla Alvarado'.");
+
+            // 10.2: Verificación del Dashboard en MainController
+            FXMLLoader mainLoader = new FXMLLoader(TestRunner.class.getResource("/org/ni/edu/uam/casopracticog5/view/MainView.fxml"));
+            Parent mainRoot = mainLoader.load();
+            MainController mainCtrl = mainLoader.getController();
+
+            Field lblTotalClientesField = MainController.class.getDeclaredField("lblTotalClientesDash");
+            lblTotalClientesField.setAccessible(true);
+            Label lblTotalClientes = (Label) lblTotalClientesField.get(mainCtrl);
+
+            check("Dashboard: KPI Total Clientes refleja valor 4",
+                    lblTotalClientes != null && "4".equals(lblTotalClientes.getText()),
+                    "El KPI lblTotalClientesDash debe mostrar '4'.");
+
+            Field lblTotalUsuariosField = MainController.class.getDeclaredField("lblTotalUsuariosDash");
+            lblTotalUsuariosField.setAccessible(true);
+            Label lblTotalUsuarios = (Label) lblTotalUsuariosField.get(mainCtrl);
+
+            check("Dashboard: KPI Total Usuarios refleja valor 2",
+                    lblTotalUsuarios != null && "2".equals(lblTotalUsuarios.getText()),
+                    "El KPI lblTotalUsuariosDash debe mostrar '2'.");
+
+            Field tablaDashField = MainController.class.getDeclaredField("tablaClientesDashboard");
+            tablaDashField.setAccessible(true);
+            TableView<?> tablaDash = (TableView<?>) tablaDashField.get(mainCtrl);
+
+            check("Dashboard: Tabla de clientes recientes poblada con los registros iniciales",
+                    tablaDash != null && tablaDash.getItems().size() >= 4,
+                    "tablaClientesDashboard debe contener la lista observable de clientes.");
+
+            Field lblBadgeRolField = MainController.class.getDeclaredField("lblBadgeRol");
+            lblBadgeRolField.setAccessible(true);
+            Label lblBadgeRol = (Label) lblBadgeRolField.get(mainCtrl);
+
+            check("Dashboard: Badge de rol activo visible",
+                    lblBadgeRol != null && lblBadgeRol.getText().contains("ADMINISTRADOR"),
+                    "El badge debe reflejar el rol de la sesión activa.");
+
+        } catch (Exception e) {
+            findings.add("Error en testDashboardYClientesIniciales: " + e.getMessage());
             e.printStackTrace();
         }
     }

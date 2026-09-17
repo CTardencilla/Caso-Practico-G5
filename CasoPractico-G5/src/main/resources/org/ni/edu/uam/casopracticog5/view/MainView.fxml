@@ -9,6 +9,8 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.effect.DropShadow?>
@@ -128,47 +130,245 @@
         </VBox>
     </top>
 
-    <!-- Área Central Dinámica con Tarjeta Blanca Redondeada -->
+    <!-- Área Central Dinámica con Dashboard Funcional -->
     <center>
-        <StackPane fx:id="contentArea" style="-fx-background-color: #F5F7FB; -fx-padding: 24;">
+        <StackPane fx:id="contentArea" style="-fx-background-color: #F5F7FB; -fx-padding: 16 20 16 20;">
             <children>
-                <!-- Tarjeta contenedora de bienvenida -->
-                <VBox fx:id="cardBienvenida" alignment="CENTER" maxWidth="560.0" maxHeight="320.0" spacing="14.0"
-                      style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-padding: 32; -fx-border-color: #E8EAF6; -fx-border-radius: 12; -fx-border-width: 1;">
-                    <effect>
-                        <DropShadow height="24.0" radius="11.5" width="24.0">
-                            <color>
-                                <Color red="0.247" green="0.317" blue="0.709" opacity="0.12" />
-                            </color>
-                        </DropShadow>
-                    </effect>
+                <!-- Dashboard Principal -->
+                <VBox fx:id="cardBienvenida" alignment="TOP_CENTER" maxWidth="940.0" spacing="14.0">
                     <children>
-                        <!-- Título Índigo Principal -->
-                        <Label text="Módulo de Navegación y Gestión"
-                               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #3F51B5;" />
+                        <!-- 1. Fila de Bienvenida y Estado Superior -->
+                        <HBox alignment="CENTER_LEFT" spacing="14.0"
+                              style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-padding: 14 18; -fx-border-color: #E8EAF6; -fx-border-radius: 10; -fx-border-width: 1;">
+                            <effect>
+                                <DropShadow height="10.0" radius="4.5" width="10.0">
+                                    <color>
+                                        <Color red="0.247" green="0.317" blue="0.709" opacity="0.08" />
+                                    </color>
+                                </DropShadow>
+                            </effect>
+                            <children>
+                                <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label fx:id="lblBienvenida" text="Panel de Control · ¡Bienvenido!"
+                                               style="-fx-font-size: 19px; -fx-font-weight: bold; -fx-text-fill: #1A237E;">
+                                            <contextMenu>
+                                                <ContextMenu>
+                                                    <items>
+                                                        <MenuItem onAction="#onAbrirRegistro" text="Ir a Registro" />
+                                                        <MenuItem onAction="#onAbrirConsulta" text="Ir a Consulta" />
+                                                        <MenuItem onAction="#onAbrirAdminUsuarios" text="Ir a Administración" />
+                                                        <SeparatorMenuItem />
+                                                        <MenuItem onAction="#onLimpiarVista" text="Volver al Inicio" />
+                                                    </items>
+                                                </ContextMenu>
+                                            </contextMenu>
+                                        </Label>
+                                        <Label fx:id="lblFechaDashboard" text="Resumen operativo y accesos directos del sistema"
+                                               style="-fx-font-size: 12px; -fx-text-fill: #5C6BC0;" />
+                                    </children>
+                                </VBox>
 
-                        <!-- Mensaje descriptivo -->
-                        <Label fx:id="lblBienvenida" alignment="CENTER" textAlignment="CENTER" wrapText="true"
-                               text="Bienvenido al Sistema de Control de Clientes. Utilice el menú superior, la barra de herramientas o haga clic derecho para navegar entre módulos."
-                               style="-fx-font-size: 14px; -fx-text-fill: #333333; -fx-line-spacing: 3px;">
-                            <contextMenu>
-                                <ContextMenu>
-                                    <items>
-                                        <MenuItem onAction="#onAbrirRegistro" text="Ir a Registro" />
-                                        <MenuItem onAction="#onAbrirConsulta" text="Ir a Consulta" />
-                                        <MenuItem onAction="#onAbrirAdminUsuarios" text="Ir a Administración" />
-                                        <SeparatorMenuItem />
-                                        <MenuItem onAction="#onLimpiarVista" text="Volver al Inicio" />
-                                    </items>
-                                </ContextMenu>
-                            </contextMenu>
-                        </Label>
+                                <Label fx:id="lblBadgeRol" text="🛡️ MODO ADMINISTRADOR"
+                                       style="-fx-background-color: #E8F5E9; -fx-text-fill: #2E7D32; -fx-border-color: #C8E6C9; -fx-border-radius: 16; -fx-background-radius: 16; -fx-padding: 6 14; -fx-font-weight: bold; -fx-font-size: 11px;" />
 
-                        <Region prefHeight="10.0" />
+                                <Button onAction="#onRefrescarDashboard" text="🔄 Actualizar"
+                                        style="-fx-background-color: #FFFFFF; -fx-border-color: #C5CAE9; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 12; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #3F51B5;">
+                                    <tooltip>
+                                        <Tooltip text="Refrescar métricas y estadísticas del sistema" />
+                                    </tooltip>
+                                </Button>
+                            </children>
+                        </HBox>
 
-                        <!-- Indicación en texto secundario índigo pálido (#7986CB) -->
-                        <Label text="Tip: Presione clic derecho sobre esta área para ver el menú contextual."
-                               style="-fx-font-size: 12px; -fx-font-style: italic; -fx-text-fill: #7986CB;" />
+                        <!-- 2. Fila de KPIs / Métricas en Tarjetas -->
+                        <HBox spacing="14.0">
+                            <children>
+                                <!-- KPI 1: Clientes Totales -->
+                                <VBox spacing="4.0" HBox.hgrow="ALWAYS"
+                                      style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-padding: 12 16; -fx-border-color: #E8EAF6; -fx-border-radius: 10; -fx-border-width: 1;">
+                                    <effect>
+                                        <DropShadow height="10.0" radius="4.5" width="10.0">
+                                            <color>
+                                                <Color red="0.247" green="0.317" blue="0.709" opacity="0.08" />
+                                            </color>
+                                        </DropShadow>
+                                    </effect>
+                                    <children>
+                                        <Label text="DIRECTORIO DE CLIENTES"
+                                               style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #7986CB;" />
+                                        <HBox alignment="BASELINE_LEFT" spacing="6.0">
+                                            <children>
+                                                <Label fx:id="lblTotalClientesDash" text="4"
+                                                       style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #3F51B5;" />
+                                                <Label text="registrados"
+                                                       style="-fx-font-size: 12px; -fx-text-fill: #757575;" />
+                                            </children>
+                                        </HBox>
+                                        <Label fx:id="lblSubClientesDash" text="4 Naturales · 0 Jurídicos"
+                                               style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #2E7D32;" />
+                                    </children>
+                                </VBox>
+
+                                <!-- KPI 2: Cobertura Territorial -->
+                                <VBox spacing="4.0" HBox.hgrow="ALWAYS"
+                                      style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-padding: 12 16; -fx-border-color: #E8EAF6; -fx-border-radius: 10; -fx-border-width: 1;">
+                                    <effect>
+                                        <DropShadow height="10.0" radius="4.5" width="10.0">
+                                            <color>
+                                                <Color red="0.247" green="0.317" blue="0.709" opacity="0.08" />
+                                            </color>
+                                        </DropShadow>
+                                    </effect>
+                                    <children>
+                                        <Label text="COBERTURA TERRITORIAL"
+                                               style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #7986CB;" />
+                                        <HBox alignment="BASELINE_LEFT" spacing="6.0">
+                                            <children>
+                                                <Label fx:id="lblTotalCiudadesDash" text="4 ciudades"
+                                                       style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2E7D32;" />
+                                            </children>
+                                        </HBox>
+                                        <Label fx:id="lblSubCiudadesDash" text="Managua, León, Granada, Masaya"
+                                               style="-fx-font-size: 11px; -fx-text-fill: #757575;" />
+                                    </children>
+                                </VBox>
+
+                                <!-- KPI 3: Cuentas y Seguridad -->
+                                <VBox spacing="4.0" HBox.hgrow="ALWAYS"
+                                      style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-padding: 12 16; -fx-border-color: #E8EAF6; -fx-border-radius: 10; -fx-border-width: 1;">
+                                    <effect>
+                                        <DropShadow height="10.0" radius="4.5" width="10.0">
+                                            <color>
+                                                <Color red="0.247" green="0.317" blue="0.709" opacity="0.08" />
+                                            </color>
+                                        </DropShadow>
+                                    </effect>
+                                    <children>
+                                        <Label text="CUENTAS DE USUARIO"
+                                               style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #7986CB;" />
+                                        <HBox alignment="BASELINE_LEFT" spacing="6.0">
+                                            <children>
+                                                <Label fx:id="lblTotalUsuariosDash" text="2"
+                                                       style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #E65100;" />
+                                                <Label text="cuentas"
+                                                       style="-fx-font-size: 12px; -fx-text-fill: #757575;" />
+                                            </children>
+                                        </HBox>
+                                        <Label fx:id="lblSubUsuariosDash" text="1 Admin · 1 Operador"
+                                               style="-fx-font-size: 11px; -fx-text-fill: #757575;" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <!-- 3. Sección Dividida: Accesos Rápidos (Izq) y Clientes Recientes (Der) -->
+                        <HBox spacing="14.0" VBox.vgrow="ALWAYS">
+                            <children>
+                                <!-- Columna Izquierda: Accesos Rápidos -->
+                                <VBox prefWidth="320.0" spacing="10.0"
+                                      style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-padding: 14; -fx-border-color: #E8EAF6; -fx-border-radius: 10; -fx-border-width: 1;">
+                                    <effect>
+                                        <DropShadow height="10.0" radius="4.5" width="10.0">
+                                            <color>
+                                                <Color red="0.247" green="0.317" blue="0.709" opacity="0.08" />
+                                            </color>
+                                        </DropShadow>
+                                    </effect>
+                                    <children>
+                                        <Label text="⚡ Accesos Rápidos"
+                                               style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #3F51B5;" />
+
+                                        <!-- Botón 1: Nuevo Cliente -->
+                                        <Button onAction="#onAbrirRegistro" maxWidth="Infinity" alignment="CENTER_LEFT"
+                                                text="  Registrar Nuevo Cliente&#10;  Alta con validación y formulario"
+                                                style="-fx-background-color: #F8F9FE; -fx-border-color: #C5CAE9; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10 12; -fx-cursor: hand; -fx-font-size: 12px; -fx-font-family: 'Segoe UI';">
+                                            <graphic>
+                                                <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../images/nuevoCliente.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </graphic>
+                                            <tooltip>
+                                                <Tooltip text="Abrir formulario para registrar un nuevo cliente" />
+                                            </tooltip>
+                                        </Button>
+
+                                        <!-- Botón 2: Consultar Clientes -->
+                                        <Button onAction="#onAbrirConsulta" maxWidth="Infinity" alignment="CENTER_LEFT"
+                                                text="  Consultar Directorio&#10;  Búsqueda, listado y detalle modal"
+                                                style="-fx-background-color: #F8F9FE; -fx-border-color: #C5CAE9; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10 12; -fx-cursor: hand; -fx-font-size: 12px; -fx-font-family: 'Segoe UI';">
+                                            <graphic>
+                                                <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../images/consultarClientes.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </graphic>
+                                            <tooltip>
+                                                <Tooltip text="Abrir consulta y catálogo de clientes" />
+                                            </tooltip>
+                                        </Button>
+
+                                        <!-- Botón 3: Panel de Administración -->
+                                        <Button onAction="#onAbrirAdminUsuarios" maxWidth="Infinity" alignment="CENTER_LEFT"
+                                                text="  Gestión de Usuarios&#10;  Cuentas, roles y permisos RBAC"
+                                                style="-fx-background-color: #F8F9FE; -fx-border-color: #C5CAE9; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10 12; -fx-cursor: hand; -fx-font-size: 12px; -fx-font-family: 'Segoe UI';">
+                                            <graphic>
+                                                <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../images/adminPanel.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </graphic>
+                                            <tooltip>
+                                                <Tooltip text="Gestionar cuentas de usuario y seguridad del sistema" />
+                                            </tooltip>
+                                        </Button>
+                                    </children>
+                                </VBox>
+
+                                <!-- Columna Derecha: Clientes Recientes -->
+                                <VBox spacing="10.0" HBox.hgrow="ALWAYS"
+                                      style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-padding: 14; -fx-border-color: #E8EAF6; -fx-border-radius: 10; -fx-border-width: 1;">
+                                    <effect>
+                                        <DropShadow height="10.0" radius="4.5" width="10.0">
+                                            <color>
+                                                <Color red="0.247" green="0.317" blue="0.709" opacity="0.08" />
+                                            </color>
+                                        </DropShadow>
+                                    </effect>
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT">
+                                            <children>
+                                                <Label text="👥 Clientes Registrados en el Sistema"
+                                                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #3F51B5;" />
+                                                <Region HBox.hgrow="ALWAYS" />
+                                                <Button onAction="#onAbrirConsulta" text="Ver todos en Consulta →"
+                                                        style="-fx-background-color: transparent; -fx-text-fill: #3F51B5; -fx-font-size: 12px; -fx-font-weight: bold; -fx-cursor: hand;" />
+                                            </children>
+                                        </HBox>
+
+                                        <TableView fx:id="tablaClientesDashboard" VBox.vgrow="ALWAYS" prefHeight="190.0"
+                                                   style="-fx-background-color: transparent; -fx-border-color: #E8EAF6; -fx-border-radius: 6;">
+                                            <columns>
+                                                <TableColumn fx:id="colDashNombre" prefWidth="230.0" text="Nombre Completo" />
+                                                <TableColumn fx:id="colDashTipo" prefWidth="90.0" text="Tipo" />
+                                                <TableColumn fx:id="colDashCiudad" prefWidth="110.0" text="Ciudad" />
+                                                <TableColumn fx:id="colDashFecha" prefWidth="110.0" text="Nacimiento" />
+                                            </columns>
+                                            <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                            </columnResizePolicy>
+                                            <placeholder>
+                                                <Label text="No hay clientes registrados aún" style="-fx-text-fill: #757575;" />
+                                            </placeholder>
+                                        </TableView>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
                     </children>
                 </VBox>
             </children>
