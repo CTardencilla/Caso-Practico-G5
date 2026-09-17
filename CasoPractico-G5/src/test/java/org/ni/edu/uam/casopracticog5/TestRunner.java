@@ -431,5 +431,90 @@ public class TestRunner {
             findings.add("Error en testConsultaClientes: " + e.getMessage());
             e.printStackTrace();
         }
+
+        testNavegacionYCicloDeVida();
+    }
+
+    private static void testNavegacionYCicloDeVida() {
+        System.out.println("\n--- 7. Pruebas de Navegación y Ciclo de Vida de Ventanas ---");
+        try {
+            // 7.1: MainView cardBienvenida y restauración limpia de inicio
+            FXMLLoader mainLoader = new FXMLLoader(TestRunner.class.getResource("/org/ni/edu/uam/casopracticog5/view/MainView.fxml"));
+            Parent mainRoot = mainLoader.load();
+            org.ni.edu.uam.casopracticog5.controller.MainController mainCtrl = mainLoader.getController();
+
+            Field cardField = mainCtrl.getClass().getDeclaredField("cardBienvenida");
+            cardField.setAccessible(true);
+            Object cardObj = cardField.get(mainCtrl);
+            check("Navegación: Tarjeta de bienvenida inyectada correctamente en MainController",
+                    cardObj != null,
+                    "cardBienvenida debe estar mapeada en MainController.");
+
+            Field contentAreaField = mainCtrl.getClass().getDeclaredField("contentArea");
+            contentAreaField.setAccessible(true);
+            javafx.scene.layout.StackPane contentArea = (javafx.scene.layout.StackPane) contentAreaField.get(mainCtrl);
+
+            // Simular cambio de vista y luego restauración de inicio
+            contentArea.getChildren().setAll(new javafx.scene.control.Label("Vista temporal"));
+            mainCtrl.onLimpiarVista(null);
+            boolean tarjetaRestaurada = contentArea.getChildren().contains(cardObj);
+            check("Navegación: onLimpiarVista restaura la tarjeta completa (cardBienvenida)",
+                    tarjetaRestaurada,
+                    "onLimpiarVista debe restaurar el contenedor completo con diseño y sombra.");
+
+            // 7.2: Detección de cambios sin guardar en RegistroClienteController
+            FXMLLoader regLoader = new FXMLLoader(TestRunner.class.getResource("/org/ni/edu/uam/casopracticog5/view/RegistroClienteView.fxml"));
+            Parent regRoot = regLoader.load();
+            org.ni.edu.uam.casopracticog5.controller.RegistroClienteController regCtrl = regLoader.getController();
+
+            boolean sinCambiosInicial = !regCtrl.hayCambiosSinGuardar();
+            check("Ciclo de Vida: Formulario limpio reporta sin cambios pendientes",
+                    sinCambiosInicial,
+                    "Al iniciar el formulario no debe reportar cambios pendientes.");
+
+            Field txtNombresField = regCtrl.getClass().getDeclaredField("txtNombres");
+            txtNombresField.setAccessible(true);
+            TextField txtNombres = (TextField) txtNombresField.get(regCtrl);
+            txtNombres.setText("Carlos Alberto");
+
+            boolean conCambiosDetectados = regCtrl.hayCambiosSinGuardar();
+            check("Ciclo de Vida: Detección activa de datos pendientes antes de navegar",
+                    conCambiosDetectados,
+                    "hayCambiosSinGuardar debe retornar true cuando se ha ingresado información.");
+
+            // 7.3: Botón Cerrar en DetalleCliente responde a ESC (cancelButton = true)
+            FXMLLoader detLoader = new FXMLLoader(TestRunner.class.getResource("/org/ni/edu/uam/casopracticog5/view/DetalleClienteView.fxml"));
+            Parent detRoot = detLoader.load();
+            org.ni.edu.uam.casopracticog5.controller.DetalleClienteController detCtrl = detLoader.getController();
+
+            Field btnCerrarField = detCtrl.getClass().getDeclaredField("btnCerrar");
+            btnCerrarField.setAccessible(true);
+            Button btnCerrar = (Button) btnCerrarField.get(detCtrl);
+            check("Usabilidad Modal: Botón Cerrar en Detalle responde a ESC (cancelButton=true)",
+                    btnCerrar.isCancelButton(),
+                    "btnCerrar debe tener cancelButton=true para cerrarse con tecla ESC.");
+
+            // 7.4: Placeholder de tabla vacía en ConsultaClientes
+            FXMLLoader consLoader = new FXMLLoader(TestRunner.class.getResource("/org/ni/edu/uam/casopracticog5/view/ConsultaClientesView.fxml"));
+            Parent consRoot = consLoader.load();
+            org.ni.edu.uam.casopracticog5.controller.ConsultaClientesController consCtrl = consLoader.getController();
+
+            Field tablaField = consCtrl.getClass().getDeclaredField("tablaClientes");
+            tablaField.setAccessible(true);
+            TableView<?> tabla = (TableView<?>) tablaField.get(consCtrl);
+            check("Usabilidad: Tabla de Consulta tiene placeholder para lista vacía",
+                    tabla.getPlaceholder() != null,
+                    "tablaClientes debe tener un placeholder informativo cuando no hay registros.");
+
+            // 7.5: Utilidades de SceneUtil disponibles
+            boolean tieneMetodosSceneUtil = org.ni.edu.uam.casopracticog5.util.SceneUtil.class.getDeclaredMethods().length >= 3;
+            check("Arquitectura: SceneUtil centraliza utilidades de ciclo de vida y navegación",
+                    tieneMetodosSceneUtil,
+                    "SceneUtil debe proveer métodos para modales y confirmaciones.");
+
+        } catch (Exception e) {
+            findings.add("Error en testNavegacionYCicloDeVida: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

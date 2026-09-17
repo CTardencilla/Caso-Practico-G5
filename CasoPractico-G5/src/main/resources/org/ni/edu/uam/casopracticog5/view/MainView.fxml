@@ -93,7 +93,7 @@
         <StackPane fx:id="contentArea" style="-fx-background-color: #F5F7FB; -fx-padding: 24;">
             <children>
                 <!-- Tarjeta contenedora de bienvenida -->
-                <VBox alignment="CENTER" maxWidth="560.0" maxHeight="320.0" spacing="14.0"
+                <VBox fx:id="cardBienvenida" alignment="CENTER" maxWidth="560.0" maxHeight="320.0" spacing="14.0"
                       style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-padding: 32; -fx-border-color: #E8EAF6; -fx-border-radius: 12; -fx-border-width: 1;">
                     <effect>
                         <DropShadow height="24.0" radius="11.5" width="24.0">

@@ -158,6 +158,7 @@
         <!-- Botón Cerrar -->
         <HBox alignment="CENTER_RIGHT">
             <Button fx:id="btnCerrar" text="Cerrar" onAction="#cerrarVentana"
+                    cancelButton="true"
                     prefWidth="110" prefHeight="35"
                     style="-fx-background-color: #3F51B5; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-family: 'Segoe UI';"/>
         </HBox>

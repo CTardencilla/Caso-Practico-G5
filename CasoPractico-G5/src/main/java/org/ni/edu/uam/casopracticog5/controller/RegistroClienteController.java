@@ -473,12 +473,24 @@ public class RegistroClienteController {
     private void cancelarRegistro() {
         if (hayCambiosSinGuardar()) {
             Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
-            alerta.initOwner(txtNombres.getScene().getWindow());
+            if (txtNombres.getScene() != null && txtNombres.getScene().getWindow() != null) {
+                alerta.initOwner(txtNombres.getScene().getWindow());
+            }
             alerta.setTitle("Confirmar cancelación");
             alerta.setHeaderText("¿Deseas cancelar el registro?");
             alerta.setContentText("Hay datos ingresados en el formulario que no se han guardado. ¿Estás seguro de que deseas salir?");
             Optional<ButtonType> respuesta = alerta.showAndWait();
             if (respuesta.isEmpty() || respuesta.get() != ButtonType.OK) {
+                return;
+            }
+        }
+
+        // Si está alojado dentro de contentArea en MainView, restaurar la tarjeta de inicio sin destruir la ventana
+        if (txtNombres.getScene() != null) {
+            javafx.scene.layout.StackPane contentArea = (javafx.scene.layout.StackPane) txtNombres.getScene().lookup("#contentArea");
+            javafx.scene.Node cardBienvenida = txtNombres.getScene().lookup("#cardBienvenida");
+            if (contentArea != null && cardBienvenida != null) {
+                contentArea.getChildren().setAll(cardBienvenida);
                 return;
             }
         }
@@ -490,7 +502,9 @@ public class RegistroClienteController {
                     )
             );
 
-            txtNombres.getScene().setRoot(menu);
+            if (txtNombres.getScene() != null) {
+                txtNombres.getScene().setRoot(menu);
+            }
 
         } catch (IOException ex) {
             mostrarAlerta(
@@ -501,7 +515,7 @@ public class RegistroClienteController {
         }
     }
 
-    private boolean hayCambiosSinGuardar() {
+    public boolean hayCambiosSinGuardar() {
         return !txtNombres.getText().isBlank()
                 || !txtApellidos.getText().isBlank()
                 || cmbTipoCliente.getValue() != null

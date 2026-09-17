@@ -93,20 +93,11 @@ public class LoginController {
 
     @FXML
     public void salir() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmación de Salida");
-        alert.setHeaderText("Estás a punto de salir del programa...");
-        alert.setContentText("¿Estás seguro de que deseas salir del sistema?");
-
-        if (txtUsuario != null && txtUsuario.getScene() != null && txtUsuario.getScene().getWindow() != null) {
-            alert.initOwner(txtUsuario.getScene().getWindow());
+        javafx.stage.Window owner = txtUsuario != null && txtUsuario.getScene() != null
+                ? txtUsuario.getScene().getWindow() : null;
+        if (org.ni.edu.uam.casopracticog5.util.SceneUtil.confirmarSalida(owner)) {
+            System.exit(0);
         }
-
-        alert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                System.exit(0);
-            }
-        });
     }
 
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String contenido) {
