@@ -178,10 +178,24 @@ public class AdminUsuariosController {
     private void aplicarPermisosRBAC() {
         boolean esAdmin = esUsuarioActualAdmin();
         Usuario actual = DataStore.getUsuarioActual();
+        String rutaIcono = esAdmin
+                ? "/org/ni/edu/uam/casopracticog5/images/administracion.png"
+                : "/org/ni/edu/uam/casopracticog5/images/operador-de-ayuda.png";
+
+        try {
+            var url = getClass().getResource(rutaIcono);
+            if (url != null) {
+                javafx.scene.image.ImageView icon = new javafx.scene.image.ImageView(new javafx.scene.image.Image(url.toExternalForm()));
+                icon.setFitHeight(18.0);
+                icon.setFitWidth(18.0);
+                icon.setPreserveRatio(true);
+                lblEstadoPermisos.setGraphic(icon);
+            }
+        } catch (Exception ignored) {}
 
         if (esAdmin) {
             String userStr = actual != null ? actual.getUsername() : "admin";
-            lblEstadoPermisos.setText("Sesión: " + userStr + " (ADMINISTRADOR)");
+            lblEstadoPermisos.setText(" Sesión: " + userStr + " (ADMINISTRADOR)");
             lblMensajeBanner.setText("Control total activado: Tienes permisos para registrar, modificar y eliminar usuarios.");
             bannerPermisos.setStyle("-fx-background-color: #E8F5E9; -fx-border-color: #C8E6C9; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8 14;");
             lblMensajeBanner.setStyle("-fx-text-fill: #2E7D32; -fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';");
@@ -189,7 +203,7 @@ public class AdminUsuariosController {
             btnActualizar.setDisable(true);
         } else {
             String userStr = actual != null ? actual.getUsername() : "operador";
-            lblEstadoPermisos.setText("Sesión: " + userStr + " (SOLO LECTURA)");
+            lblEstadoPermisos.setText(" Sesión: " + userStr + " (SOLO LECTURA)");
             lblMensajeBanner.setText("⚠️ Modo solo lectura: Se requieren permisos de ADMINISTRADOR para modificar o eliminar usuarios.");
             bannerPermisos.setStyle("-fx-background-color: #FFF3E0; -fx-border-color: #FFE0B2; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8 14;");
             lblMensajeBanner.setStyle("-fx-text-fill: #E65100; -fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';");

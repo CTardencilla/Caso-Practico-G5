@@ -169,11 +169,26 @@
                                     </children>
                                 </VBox>
 
-                                <Label fx:id="lblBadgeRol" text="🛡️ MODO ADMINISTRADOR"
-                                       style="-fx-background-color: #E8F5E9; -fx-text-fill: #2E7D32; -fx-border-color: #C8E6C9; -fx-border-radius: 16; -fx-background-radius: 16; -fx-padding: 6 14; -fx-font-weight: bold; -fx-font-size: 11px;" />
+                                <Label fx:id="lblBadgeRol" text=" MODO ADMINISTRADOR"
+                                       style="-fx-background-color: #E8F5E9; -fx-text-fill: #2E7D32; -fx-border-color: #C8E6C9; -fx-border-radius: 16; -fx-background-radius: 16; -fx-padding: 5 12; -fx-font-weight: bold; -fx-font-size: 11px;">
+                                    <graphic>
+                                        <ImageView fx:id="imgBadgeRol" fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../images/administracion.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </Label>
 
-                                <Button onAction="#onRefrescarDashboard" text="🔄 Actualizar"
+                                <Button onAction="#onRefrescarDashboard" text=" Actualizar"
                                         style="-fx-background-color: #FFFFFF; -fx-border-color: #C5CAE9; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 12; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #3F51B5;">
+                                    <graphic>
+                                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../images/actualizar.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
                                     <tooltip>
                                         <Tooltip text="Refrescar métricas y estadísticas del sistema" />
                                     </tooltip>

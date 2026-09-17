@@ -849,6 +849,37 @@ public class TestRunner {
                     lblBadgeRol != null && lblBadgeRol.getText().contains("ADMINISTRADOR"),
                     "El badge debe reflejar el rol de la sesión activa.");
 
+            // 10.3: Verificación de las imágenes personalizadas añadidas
+            check("Recurso: actualizar.png existe en classpath",
+                    TestRunner.class.getResource("/org/ni/edu/uam/casopracticog5/images/actualizar.png") != null,
+                    "No se encontró la imagen actualizar.png.");
+
+            check("Recurso: administracion.png existe en classpath",
+                    TestRunner.class.getResource("/org/ni/edu/uam/casopracticog5/images/administracion.png") != null,
+                    "No se encontró la imagen administracion.png.");
+
+            check("Recurso: operador-de-ayuda.png existe en classpath",
+                    TestRunner.class.getResource("/org/ni/edu/uam/casopracticog5/images/operador-de-ayuda.png") != null,
+                    "No se encontró la imagen operador-de-ayuda.png.");
+
+            // 10.4: Comprobar dinamismo de imagen según la cuenta logueada
+            Usuario operUser = DataStore.buscarUsuario("operador");
+            DataStore.setUsuarioActual(operUser);
+            mainCtrl.actualizarDashboard();
+
+            check("Dashboard: Badge cambia a MODO OPERADOR dinámicamente",
+                    lblBadgeRol.getText().contains("OPERADOR"),
+                    "El badge debe cambiar dinámicamente al loguearse como operador.");
+
+            // Restaurar a admin
+            Usuario adminUser = DataStore.buscarUsuario("admin");
+            DataStore.setUsuarioActual(adminUser);
+            mainCtrl.actualizarDashboard();
+
+            check("Dashboard: Badge vuelve a MODO ADMINISTRADOR dinámicamente",
+                    lblBadgeRol.getText().contains("ADMINISTRADOR"),
+                    "El badge debe cambiar a administrador.");
+
         } catch (Exception e) {
             findings.add("Error en testDashboardYClientesIniciales: " + e.getMessage());
             e.printStackTrace();

@@ -22,6 +22,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -51,6 +52,9 @@ public class MainController {
 
     @FXML
     private Label lblBadgeRol;
+
+    @FXML
+    private ImageView imgBadgeRol;
 
     @FXML
     private Label lblTotalClientesDash;
@@ -181,13 +185,42 @@ public class MainController {
             lblFechaDashboard.setText(fechaTexto + " · Resumen operativo y accesos rápidos");
         }
 
-        if (lblBadgeRol != null && usuario != null) {
-            if (usuario.esAdmin()) {
-                lblBadgeRol.setText("🛡️ MODO ADMINISTRADOR");
-                lblBadgeRol.setStyle("-fx-background-color: #E8F5E9; -fx-text-fill: #2E7D32; -fx-border-color: #C8E6C9; -fx-border-radius: 16; -fx-background-radius: 16; -fx-padding: 6 14; -fx-font-weight: bold; -fx-font-size: 11px;");
-            } else {
-                lblBadgeRol.setText("👤 MODO OPERADOR");
-                lblBadgeRol.setStyle("-fx-background-color: #FFF3E0; -fx-text-fill: #E65100; -fx-border-color: #FFE0B2; -fx-border-radius: 16; -fx-background-radius: 16; -fx-padding: 6 14; -fx-font-weight: bold; -fx-font-size: 11px;");
+        if (usuario != null) {
+            String rutaIcono = usuario.esAdmin()
+                    ? "/org/ni/edu/uam/casopracticog5/images/administracion.png"
+                    : "/org/ni/edu/uam/casopracticog5/images/operador-de-ayuda.png";
+
+            try {
+                var url = getClass().getResource(rutaIcono);
+                if (url != null) {
+                    javafx.scene.image.Image img = new javafx.scene.image.Image(url.toExternalForm());
+                    if (imgBadgeRol != null) {
+                        imgBadgeRol.setImage(img);
+                    } else if (lblBadgeRol != null) {
+                        ImageView iv = new ImageView(img);
+                        iv.setFitWidth(18);
+                        iv.setFitHeight(18);
+                        iv.setPreserveRatio(true);
+                        lblBadgeRol.setGraphic(iv);
+                    }
+                    if (lblSesionUsuario != null) {
+                        ImageView ivSesion = new ImageView(img);
+                        ivSesion.setFitWidth(16);
+                        ivSesion.setFitHeight(16);
+                        ivSesion.setPreserveRatio(true);
+                        lblSesionUsuario.setGraphic(ivSesion);
+                    }
+                }
+            } catch (Exception ignored) {}
+
+            if (lblBadgeRol != null) {
+                if (usuario.esAdmin()) {
+                    lblBadgeRol.setText(" MODO ADMINISTRADOR");
+                    lblBadgeRol.setStyle("-fx-background-color: #E8F5E9; -fx-text-fill: #2E7D32; -fx-border-color: #C8E6C9; -fx-border-radius: 16; -fx-background-radius: 16; -fx-padding: 5 12; -fx-font-weight: bold; -fx-font-size: 11px;");
+                } else {
+                    lblBadgeRol.setText(" MODO OPERADOR");
+                    lblBadgeRol.setStyle("-fx-background-color: #FFF3E0; -fx-text-fill: #E65100; -fx-border-color: #FFE0B2; -fx-border-radius: 16; -fx-background-radius: 16; -fx-padding: 5 12; -fx-font-weight: bold; -fx-font-size: 11px;");
+                }
             }
         }
 

@@ -10,6 +10,8 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -115,9 +117,16 @@
                         </Button>
 
                         <HBox spacing="8">
-                            <Button fx:id="btnActualizar" text="Actualizar" onAction="#onActualizarUsuario" disable="true"
+                            <Button fx:id="btnActualizar" text=" Actualizar" onAction="#onActualizarUsuario" disable="true"
                                     HBox.hgrow="ALWAYS" maxWidth="1.7976931348623157E308" prefHeight="32"
                                     style="-fx-background-color: #5C6BC0; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand;">
+                                <graphic>
+                                    <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                        <image>
+                                            <Image url="@../images/actualizar.png"/>
+                                        </image>
+                                    </ImageView>
+                                </graphic>
                                 <tooltip>
                                     <Tooltip text="Guardar cambios del usuario seleccionado"/>
                                 </tooltip>
