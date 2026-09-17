@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b944f6c3-2e48-48ab-8d3a-7f0549b57f81" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/CasoPractico-G5/src/main/resources/org/ni/edu/uam/casopracticog5/view/LoginView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/CasoPractico-G5/src/main/resources/org/ni/edu/uam/casopracticog5/view/LoginView.fxml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="19" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0000000010051096" />
+      <entry key="MS500" value="1.0159244614727774" />
+      <entry key="S2" value="1.4426816227622745" />
+      <entry key="S5" value="2.038640779455937" />
+      <entry key="S10" value="2.427591377648537" />
+      <entry key="S30" value="2.7835443157732334" />
+      <entry key="S60" value="2.8881622029115963" />
+      <entry key="M2" value="2.943145052293577" />
+      <entry key="M5" value="2.97702892170406" />
+      <entry key="M10" value="2.988475900519171" />
+      <entry key="M15" value="2.992308669878577" />
+      <entry key="M30" value="2.9961500293065138" />
+      <entry key="H1" value="2.998073936918102" />
+      <entry key="H2" value="2.999036698859204" />
+      <entry key="H4" value="2.999518282008871" />
+      <entry key="D1" value="2.9999197043023913" />
+      <entry key="W1" value="2.9999885289566675" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="0.0" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="0.0" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="0.0" />
+      <entry key="H2" value="0.0" />
+      <entry key="H4" value="0.0" />
+      <entry key="D1" value="0.0" />
+      <entry key="W1" value="0.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="6.953370095692538E-4" />
+      <entry key="MS500" value="0.2344030530075044" />
+      <entry key="S2" value="0.8972838310493337" />
+      <entry key="S5" value="1.6110754347983387" />
+      <entry key="S10" value="2.135878094141066" />
+      <entry key="S30" value="2.6607272510865245" />
+      <entry key="S60" value="2.822848328759607" />
+      <entry key="M2" value="2.909449360194818" />
+      <entry key="M5" value="2.963292906922801" />
+      <entry key="M10" value="2.9815642142551173" />
+      <entry key="M15" value="2.9876911183866017" />
+      <entry key="M30" value="2.9938363596085407" />
+      <entry key="H1" value="2.9969158760194836" />
+      <entry key="H2" value="2.998457361576712" />
+      <entry key="H4" value="2.9992285366191966" />
+      <entry key="D1" value="2.9998714027412" />
+      <entry key="W1" value="2.9999816284724634" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3JQQ4h1r6JDnTUoYKCYTf44wZI8" />
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/login&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/choco/OneDrive/Documentos/Ingeniería en Sistemas de Información/Caso-Practico-G5&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
+  }
+}</component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="Caso-Practico-G5" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="Caso-Practico-G5" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-a203e0a19954-intellij.indexing.shared.core-IU-262.10315.125" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.10315.125" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b944f6c3-2e48-48ab-8d3a-7f0549b57f81" name="Changes" comment="" />
+      <created>1789590623115</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1789590623115</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

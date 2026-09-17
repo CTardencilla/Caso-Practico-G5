@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.ni.edu.uam.casopracticog5.controller.LoginController">
-    <Label text="LoginView — Placeholder"/>
+<VBox alignment="CENTER" prefHeight="457.0" prefWidth="296.0" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="org.ni.edu.uam.casopracticog5.controller.LoginController">
+    <Label text="LoginView — Placeholder" />
 </VBox>
