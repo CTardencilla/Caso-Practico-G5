@@ -1,9 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.ni.edu.uam.casopracticog5.controller.MainController">
-    <Label text="MainView — Placeholder"/>
-</VBox>
+<BorderPane fx:id="rootPane" prefHeight="650.0" prefWidth="900.0"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.ni.edu.uam.casopracticog5.controller.MainController">
+
+    <!-- Área Superior: MenuBar y ToolBar -->
+    <top>
+        <VBox>
+            <!-- Menú Principal -->
+            <MenuBar>
+                <menus>
+                    <Menu text="Archivo">
+                        <items>
+                            <MenuItem onAction="#onSeleccionarCarpeta" text="Seleccionar carpeta de respaldos..." />
+                            <MenuItem onAction="#onSolicitarObservaciones" text="Agregar observación general..." />
+                            <SeparatorMenuItem />
+                            <MenuItem onAction="#onCerrarSesion" text="Cerrar sesión" />
+                            <MenuItem onAction="#onSalir" text="Salir" />
+                        </items>
+                    </Menu>
+
+                    <Menu text="Navegación">
+                        <items>
+                            <MenuItem onAction="#onAbrirRegistro" text="Registro de Clientes" />
+                            <MenuItem onAction="#onAbrirConsulta" text="Consulta de Clientes" />
+                        </items>
+                    </Menu>
+
+                    <Menu text="Ayuda">
+                        <items>
+                            <MenuItem onAction="#onAcercaDe" text="Acerca del Sistema" />
+                        </items>
+                    </Menu>
+                </menus>
+            </MenuBar>
+
+            <!-- Barra de Herramientas de Acceso Rápido -->
+            <ToolBar>
+                <items>
+                    <Button onAction="#onAbrirRegistro" text="Nuevo Cliente" />
+                    <Button onAction="#onAbrirConsulta" text="Consultar Clientes" />
+                    <Button onAction="#onSeleccionarCarpeta" text="Ruta Respaldo" />
+                    <Button onAction="#onSolicitarObservaciones" text="Observaciones" />
+                </items>
+            </ToolBar>
+        </VBox>
+    </top>
+
+    <!-- Área Central: Contenedor Dinámico -->
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-background-color: #f4f6f8;">
+            <children>
+                <Label fx:id="lblBienvenida"
+                       text="Bienvenido al Sistema de Gestión de Clientes. Use el menú o la barra superior para navegar."
+                       textAlignment="CENTER"
+                       wrapText="true"
+                       style="-fx-font-size: 16px; -fx-text-fill: #555555;">
+                    <contextMenu>
+                        <ContextMenu>
+                            <items>
+                                <MenuItem onAction="#onAbrirRegistro" text="Ir a Registro" />
+                                <MenuItem onAction="#onAbrirConsulta" text="Ir a Consulta" />
+                                <SeparatorMenuItem />
+                                <MenuItem onAction="#onLimpiarVista" text="Volver al Inicio" />
+                            </items>
+                        </ContextMenu>
+                    </contextMenu>
+                </Label>
+            </children>
+        </StackPane>
+    </center>
+
+    <!-- Área Inferior: Barra de Estado con la ruta elegida -->
+    <bottom>
+        <HBox spacing="10.0" style="-fx-background-color: #e0e0e0; -fx-padding: 6 12 6 12;">
+            <children>
+                <Label style="-fx-font-weight: bold;" text="Carpeta de reportes:" />
+                <Label fx:id="lblRutaCarpeta" text="Ninguna carpeta seleccionada" textOverrun="ELLIPSIS" />
+            </children>
+        </HBox>
+    </bottom>
+
+</BorderPane>

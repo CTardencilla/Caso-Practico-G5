@@ -1,8 +1,10 @@
 module org.ni.edu.uam.casopracticog5 {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.graphics;
+    requires javafx.base;
 
-    opens org.ni.edu.uam.casopracticog5 to javafx.fxml;
+    opens org.ni.edu.uam.casopracticog5 to javafx.fxml, javafx.graphics;
     opens org.ni.edu.uam.casopracticog5.controller to javafx.fxml;
     opens org.ni.edu.uam.casopracticog5.model to javafx.base;
 
