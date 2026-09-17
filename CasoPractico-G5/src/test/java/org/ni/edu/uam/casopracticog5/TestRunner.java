@@ -6,10 +6,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import org.ni.edu.uam.casopracticog5.controller.AdminUsuariosController;
 import org.ni.edu.uam.casopracticog5.controller.LoginController;
+import org.ni.edu.uam.casopracticog5.controller.MainController;
 import org.ni.edu.uam.casopracticog5.controller.RegistroClienteController;
 import org.ni.edu.uam.casopracticog5.model.Cliente;
 import org.ni.edu.uam.casopracticog5.model.DataStore;
+import org.ni.edu.uam.casopracticog5.model.Usuario;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -56,6 +59,18 @@ public class TestRunner {
         // 5. Probar carga de DetalleClienteController
         testDetalleCliente();
 
+        // 6. Probar ConsultaClientesController
+        testConsultaClientes();
+
+        // 7. Probar Navegación y Ciclo de Vida
+        testNavegacionYCicloDeVida();
+
+        // 8. Probar Barra de Herramientas (Iconos y Tooltips)
+        testToolbarIconsAndTooltips();
+
+        // 9. Probar Panel de Administración de Usuarios (RBAC y CRUD)
+        testAdminUsuarios();
+
         System.out.println("\n==================================================");
         System.out.println("  RESUMEN DE PRUEBAS:");
         System.out.println("  Total pruebas: " + testsRun);
@@ -90,7 +105,8 @@ public class TestRunner {
                 "/org/ni/edu/uam/casopracticog5/view/MainView.fxml",
                 "/org/ni/edu/uam/casopracticog5/view/RegistroClienteView.fxml",
                 "/org/ni/edu/uam/casopracticog5/view/ConsultaClientesView.fxml",
-                "/org/ni/edu/uam/casopracticog5/view/DetalleClienteView.fxml"
+                "/org/ni/edu/uam/casopracticog5/view/DetalleClienteView.fxml",
+                "/org/ni/edu/uam/casopracticog5/view/AdminUsuariosView.fxml"
         };
 
         for (String fxml : fxmls) {
@@ -434,8 +450,6 @@ public class TestRunner {
             findings.add("Error en testDetalleCliente: " + e.getMessage());
             e.printStackTrace();
         }
-
-        testConsultaClientes();
     }
 
     private static void testConsultaClientes() {
@@ -495,8 +509,6 @@ public class TestRunner {
             findings.add("Error en testConsultaClientes: " + e.getMessage());
             e.printStackTrace();
         }
-
-        testNavegacionYCicloDeVida();
     }
 
     private static void testNavegacionYCicloDeVida() {
@@ -578,6 +590,188 @@ public class TestRunner {
 
         } catch (Exception e) {
             findings.add("Error en testNavegacionYCicloDeVida: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private static void testToolbarIconsAndTooltips() {
+        System.out.println("\n--- 8. Pruebas de Barra de Herramientas (Iconos y Tooltips) ---");
+        try {
+            FXMLLoader mainLoader = new FXMLLoader(TestRunner.class.getResource("/org/ni/edu/uam/casopracticog5/view/MainView.fxml"));
+            Parent mainRoot = mainLoader.load();
+            MainController mainCtrl = mainLoader.getController();
+
+            // Buscar ToolBar dentro del nodo raíz
+            ToolBar toolBar = null;
+            if (mainRoot instanceof javafx.scene.layout.BorderPane bp) {
+                if (bp.getTop() instanceof javafx.scene.layout.VBox topVbox) {
+                    for (javafx.scene.Node n : topVbox.getChildren()) {
+                        if (n instanceof ToolBar tb) {
+                            toolBar = tb;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            check("Toolbar: Componente ToolBar presente en MainView",
+                    toolBar != null,
+                    "No se encontró la ToolBar en la parte superior de MainView.");
+
+            if (toolBar != null) {
+                List<Button> toolbarButtons = new ArrayList<>();
+                for (javafx.scene.Node item : toolBar.getItems()) {
+                    if (item instanceof Button b) {
+                        toolbarButtons.add(b);
+                    }
+                }
+
+                check("Toolbar: Exactamente 3 botones principales (Nuevo, Consulta, Admin)",
+                        toolbarButtons.size() == 3,
+                        "Se esperaban 3 botones en la barra de herramientas, encontrados: " + toolbarButtons.size());
+
+                for (int i = 0; i < toolbarButtons.size(); i++) {
+                    Button b = toolbarButtons.get(i);
+                    boolean sinTexto = b.getText() == null || b.getText().isBlank();
+                    check("Toolbar Botón #" + (i + 1) + ": Sin texto plano (solo icono)",
+                            sinTexto,
+                            "El botón no debe mostrar texto directo, debe usar iconos y tooltips.");
+
+                    boolean tieneGrafico = b.getGraphic() instanceof ImageView;
+                    check("Toolbar Botón #" + (i + 1) + ": Tiene ImageView asignado",
+                            tieneGrafico,
+                            "El botón debe tener un ImageView asignado como contenido gráfico.");
+
+                    boolean tieneTooltip = b.getTooltip() != null && !b.getTooltip().getText().isBlank();
+                    check("Toolbar Botón #" + (i + 1) + ": Tiene Tooltip explicativo",
+                            tieneTooltip,
+                            "El botón debe tener un Tooltip con la descripción de su acción.");
+                }
+
+                // Verificar existencia de los recursos de imagen
+                check("Recurso: nuevoCliente.png existe",
+                        TestRunner.class.getResource("/org/ni/edu/uam/casopracticog5/images/nuevoCliente.png") != null,
+                        "La imagen nuevoCliente.png no se encuentra en el classpath.");
+
+                check("Recurso: consultarClientes.png existe",
+                        TestRunner.class.getResource("/org/ni/edu/uam/casopracticog5/images/consultarClientes.png") != null,
+                        "La imagen consultarClientes.png no se encuentra en el classpath.");
+
+                check("Recurso: adminPanel.png existe",
+                        TestRunner.class.getResource("/org/ni/edu/uam/casopracticog5/images/adminPanel.png") != null,
+                        "La imagen adminPanel.png no se encuentra en el classpath.");
+            }
+
+            // Comprobar que MainController ya no tenga métodos de respaldo ni observaciones
+            boolean tieneSeleccionarCarpeta = false;
+            boolean tieneSolicitarObservaciones = false;
+            for (Method m : MainController.class.getDeclaredMethods()) {
+                if (m.getName().equals("onSeleccionarCarpeta")) tieneSeleccionarCarpeta = true;
+                if (m.getName().equals("onSolicitarObservaciones")) tieneSolicitarObservaciones = true;
+            }
+            check("Limpieza: onSeleccionarCarpeta y ruta de respaldo eliminados por completo",
+                    !tieneSeleccionarCarpeta,
+                    "onSeleccionarCarpeta aún existe en MainController.");
+            check("Limpieza: onSolicitarObservaciones eliminado por completo",
+                    !tieneSolicitarObservaciones,
+                    "onSolicitarObservaciones aún existe en MainController.");
+
+        } catch (Exception e) {
+            findings.add("Error en testToolbarIconsAndTooltips: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private static void testAdminUsuarios() {
+        System.out.println("\n--- 9. Pruebas de Panel de Administración de Usuarios (RBAC y CRUD) ---");
+        try {
+            // 9.1: Modelo Usuario
+            Usuario adminUser = new Usuario("testadmin", "pass123", "Administrador de Pruebas", "ADMINISTRADOR", LocalDate.now(), true);
+            check("Usuario: Creación y rol ADMINISTRADOR",
+                    adminUser.esAdmin() && adminUser.isActivo(),
+                    "adminUser.esAdmin() debe ser true.");
+
+            Usuario operUser = new Usuario("testoper", "pass123", "Operador de Pruebas", "OPERADOR", LocalDate.now(), true);
+            check("Usuario: Creación y rol OPERADOR",
+                    !operUser.esAdmin() && operUser.isActivo(),
+                    "operUser.esAdmin() debe ser false.");
+
+            // 9.2: DataStore y usuarios predeterminados
+            ObservableList<Usuario> listaUsuarios = DataStore.getUsuarios();
+            check("DataStore: Lista de usuarios no es nula y contiene cuentas iniciales",
+                    listaUsuarios != null && listaUsuarios.size() >= 2,
+                    "DataStore debe contener al menos al admin y operador iniciales.");
+
+            Usuario authAdmin = DataStore.autenticar("admin", "12345");
+            check("DataStore: Autenticación exitosa de 'admin'",
+                    authAdmin != null && authAdmin.esAdmin(),
+                    "admin con clave 12345 debe autenticarse correctamente.");
+
+            Usuario authFallida = DataStore.autenticar("admin", "clave_mala");
+            check("DataStore: Rechazo de clave incorrecta",
+                    authFallida == null,
+                    "No debe autenticar con contraseña incorrecta.");
+
+            Usuario busqueda = DataStore.buscarUsuario("admin");
+            check("DataStore: Búsqueda de usuario existente por username",
+                    busqueda != null && "admin".equalsIgnoreCase(busqueda.getUsername()),
+                    "buscarUsuario('admin') debe retornar el objeto Usuario.");
+
+            // 9.3: Controlador AdminUsuarios en modo Administrador
+            DataStore.setUsuarioActual(authAdmin);
+            FXMLLoader adminLoader = new FXMLLoader(TestRunner.class.getResource("/org/ni/edu/uam/casopracticog5/view/AdminUsuariosView.fxml"));
+            Parent adminRoot = adminLoader.load();
+            AdminUsuariosController adminCtrl = adminLoader.getController();
+
+            check("AdminUsuarios: Detección correcta de rol ADMINISTRADOR activo",
+                    adminCtrl.esUsuarioActualAdmin(),
+                    "adminCtrl.esUsuarioActualAdmin() debe ser true cuando la sesión es admin.");
+
+            Field btnGuardarField = AdminUsuariosController.class.getDeclaredField("btnGuardar");
+            btnGuardarField.setAccessible(true);
+            Button btnGuardar = (Button) btnGuardarField.get(adminCtrl);
+
+            check("AdminUsuarios (Admin): Botón Guardar habilitado para administradores",
+                    !btnGuardar.isDisable(),
+                    "btnGuardar debe estar habilitado para rol ADMINISTRADOR.");
+
+            // 9.4: Controlador AdminUsuarios en modo Operador (RBAC: Solo Lectura)
+            Usuario operActual = DataStore.buscarUsuario("operador");
+            DataStore.setUsuarioActual(operActual);
+
+            FXMLLoader operLoader = new FXMLLoader(TestRunner.class.getResource("/org/ni/edu/uam/casopracticog5/view/AdminUsuariosView.fxml"));
+            Parent operRoot = operLoader.load();
+            AdminUsuariosController operCtrl = operLoader.getController();
+
+            check("AdminUsuarios: Detección de rol OPERADOR (no admin)",
+                    !operCtrl.esUsuarioActualAdmin(),
+                    "operCtrl.esUsuarioActualAdmin() debe ser false para rol OPERADOR.");
+
+            Button btnGuardarOper = (Button) btnGuardarField.get(operCtrl);
+            Field btnModificarField = AdminUsuariosController.class.getDeclaredField("btnModificar");
+            btnModificarField.setAccessible(true);
+            Button btnModificarOper = (Button) btnModificarField.get(operCtrl);
+            Field btnEliminarField = AdminUsuariosController.class.getDeclaredField("btnEliminar");
+            btnEliminarField.setAccessible(true);
+            Button btnEliminarOper = (Button) btnEliminarField.get(operCtrl);
+
+            check("RBAC (Operador): Botón Guardar bloqueado para no administradores",
+                    btnGuardarOper.isDisable(),
+                    "btnGuardar debe estar deshabilitado para rol OPERADOR.");
+
+            check("RBAC (Operador): Botón Modificar bloqueado para no administradores",
+                    btnModificarOper.isDisable(),
+                    "btnModificar debe estar deshabilitado para rol OPERADOR.");
+
+            check("RBAC (Operador): Botón Eliminar bloqueado para no administradores",
+                    btnEliminarOper.isDisable(),
+                    "btnEliminar debe estar deshabilitado para rol OPERADOR.");
+
+            // Restaurar sesión de prueba a admin
+            DataStore.setUsuarioActual(authAdmin);
+
+        } catch (Exception e) {
+            findings.add("Error en testAdminUsuarios: " + e.getMessage());
             e.printStackTrace();
         }
     }

@@ -10,7 +10,10 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -23,7 +26,7 @@
             xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.ni.edu.uam.casopracticog5.controller.MainController">
 
-    <!-- Área Superior: MenuBar Índigo + ToolBar estilizada -->
+    <!-- Área Superior: MenuBar Índigo + ToolBar estilizada con iconos -->
     <top>
         <VBox>
             <children>
@@ -32,9 +35,6 @@
                     <menus>
                         <Menu text="Archivo" style="-fx-text-fill: white;">
                             <items>
-                                <MenuItem onAction="#onSeleccionarCarpeta" text="Seleccionar carpeta de respaldos..." />
-                                <MenuItem onAction="#onSolicitarObservaciones" text="Agregar observación general..." />
-                                <SeparatorMenuItem />
                                 <MenuItem onAction="#onCerrarSesion" text="Cerrar sesión" />
                                 <MenuItem onAction="#onSalir" text="Salir" />
                             </items>
@@ -44,6 +44,13 @@
                             <items>
                                 <MenuItem onAction="#onAbrirRegistro" text="Registro de Clientes" />
                                 <MenuItem onAction="#onAbrirConsulta" text="Consulta de Clientes" />
+                                <MenuItem onAction="#onAbrirAdminUsuarios" text="Panel de Administración" />
+                            </items>
+                        </Menu>
+
+                        <Menu text="Administración">
+                            <items>
+                                <MenuItem onAction="#onAbrirAdminUsuarios" text="Gestión de Usuarios..." />
                             </items>
                         </Menu>
 
@@ -55,14 +62,38 @@
                     </menus>
                 </MenuBar>
 
-                <!-- ToolBar moderna con fondo Índigo suave (#E8EAF6) -->
+                <!-- ToolBar moderna con fondo Índigo suave (#E8EAF6) con iconos y tooltips -->
                 <ToolBar style="-fx-background-color: #E8EAF6; -fx-padding: 8 16 8 16; -fx-border-color: #C5CAE9; -fx-border-width: 0 0 1 0;">
                     <items>
-                        <Button onAction="#onAbrirRegistro" text="Nuevo Cliente"
-                                style="-fx-background-color: #3F51B5; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 14 6 14;" />
+                        <!-- Botón 1: Nuevo Cliente (Icono + Tooltip) -->
+                        <Button onAction="#onAbrirRegistro"
+                                style="-fx-background-color: #FFFFFF; -fx-border-color: #C5CAE9; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 10 6 10;">
+                            <graphic>
+                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../images/nuevoCliente.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <tooltip>
+                                <Tooltip text="Registrar nuevo cliente en el sistema" />
+                            </tooltip>
+                        </Button>
 
-                        <Button onAction="#onAbrirConsulta" text="Consultar Clientes"
-                                style="-fx-background-color: #5C6BC0; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 14 6 14;" />
+                        <!-- Botón 2: Consultar Clientes (Icono + Tooltip) -->
+                        <Button onAction="#onAbrirConsulta"
+                                style="-fx-background-color: #FFFFFF; -fx-border-color: #C5CAE9; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 10 6 10;">
+                            <graphic>
+                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../images/consultarClientes.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <tooltip>
+                                <Tooltip text="Consultar listado de clientes registrados" />
+                            </tooltip>
+                        </Button>
 
                         <Separator orientation="VERTICAL">
                             <padding>
@@ -70,11 +101,20 @@
                             </padding>
                         </Separator>
 
-                        <Button onAction="#onSeleccionarCarpeta" text="Ruta Respaldo"
-                                style="-fx-background-color: #FFFFFF; -fx-text-fill: #3F51B5; -fx-border-color: #5C6BC0; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 5 12 5 12;" />
-
-                        <Button onAction="#onSolicitarObservaciones" text="Observaciones"
-                                style="-fx-background-color: #FFFFFF; -fx-text-fill: #3F51B5; -fx-border-color: #5C6BC0; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 5 12 5 12;" />
+                        <!-- Botón 3: Panel de Administración de Usuarios (Icono + Tooltip) -->
+                        <Button onAction="#onAbrirAdminUsuarios"
+                                style="-fx-background-color: #FFFFFF; -fx-border-color: #C5CAE9; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 10 6 10;">
+                            <graphic>
+                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../images/adminPanel.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <tooltip>
+                                <Tooltip text="Panel de administración y gestión de usuarios" />
+                            </tooltip>
+                        </Button>
                     </items>
                     <effect>
                         <DropShadow height="8.0" radius="3.5" width="8.0">
@@ -116,6 +156,7 @@
                                     <items>
                                         <MenuItem onAction="#onAbrirRegistro" text="Ir a Registro" />
                                         <MenuItem onAction="#onAbrirConsulta" text="Ir a Consulta" />
+                                        <MenuItem onAction="#onAbrirAdminUsuarios" text="Ir a Administración" />
                                         <SeparatorMenuItem />
                                         <MenuItem onAction="#onLimpiarVista" text="Volver al Inicio" />
                                     </items>
@@ -139,9 +180,12 @@
         <HBox alignment="CENTER_LEFT" spacing="12.0"
               style="-fx-background-color: #E8EAF6; -fx-padding: 8 16 8 16; -fx-border-color: #C5CAE9; -fx-border-width: 1 0 0 0;">
             <children>
-                <Label style="-fx-font-weight: bold; -fx-text-fill: #3F51B5; -fx-font-size: 12px;" text="Carpeta de reportes:" />
-                <Label fx:id="lblRutaCarpeta" text="Ninguna carpeta seleccionada" textOverrun="ELLIPSIS"
-                       style="-fx-text-fill: #333333; -fx-font-size: 12px;" />
+                <Label style="-fx-font-weight: bold; -fx-text-fill: #3F51B5; -fx-font-size: 12px;" text="Sesión activa:" />
+                <Label fx:id="lblSesionUsuario" text="admin (ADMINISTRADOR)" textOverrun="ELLIPSIS"
+                       style="-fx-text-fill: #333333; -fx-font-size: 12px; -fx-font-weight: bold;" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Label text="Sistema de Gestión de Clientes · UAM 2026"
+                       style="-fx-text-fill: #7986CB; -fx-font-size: 11px; -fx-font-style: italic;" />
             </children>
         </HBox>
     </bottom>

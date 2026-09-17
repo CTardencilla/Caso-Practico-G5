@@ -50,7 +50,7 @@ public class LoginController {
         if (usuario == null || password == null) {
             return false;
         }
-        return usuario.trim().equals("admin") && password.equals("12345");
+        return org.ni.edu.uam.casopracticog5.model.DataStore.autenticar(usuario, password) != null;
     }
 
     @FXML
@@ -68,7 +68,11 @@ public class LoginController {
             return;
         }
 
-        if (autenticar(usuario, password)) {
+        org.ni.edu.uam.casopracticog5.model.Usuario usuarioAuth =
+                org.ni.edu.uam.casopracticog5.model.DataStore.autenticar(usuario, password);
+
+        if (usuarioAuth != null) {
+            org.ni.edu.uam.casopracticog5.model.DataStore.setUsuarioActual(usuarioAuth);
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/ni/edu/uam/casopracticog5/view/MainView.fxml"));
                 Parent root = loader.load();

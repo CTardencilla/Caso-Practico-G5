@@ -1,6 +1,5 @@
 package org.ni.edu.uam.casopracticog5.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -14,12 +13,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import org.ni.edu.uam.casopracticog5.model.DataStore;
+import org.ni.edu.uam.casopracticog5.model.Usuario;
 import org.ni.edu.uam.casopracticog5.util.SceneUtil;
 
 public class MainController {
@@ -37,62 +36,27 @@ public class MainController {
     private Label lblBienvenida;
 
     @FXML
-    private Label lblRutaCarpeta;
+    private Label lblSesionUsuario;
 
-    private File carpetaSeleccionada;
     private Object controladorActual;
 
     @FXML
     public void initialize() {
-        // Inicialización de estado predeterminado
-    }
-
-    /**
-     * Requisito: DirectoryChooser para seleccionar carpeta de respaldos/reportes
-     * y reflejar la ruta en el Label de la barra inferior.
-     */
-    @FXML
-    public void onSeleccionarCarpeta(ActionEvent event) {
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Seleccionar Carpeta para Respaldos y Reportes");
-
-        if (carpetaSeleccionada != null && carpetaSeleccionada.exists()) {
-            directoryChooser.setInitialDirectory(carpetaSeleccionada);
-        }
-
-        Stage stage = (Stage) rootPane.getScene().getWindow();
-        File folder = directoryChooser.showDialog(stage);
-
-        if (folder != null) {
-            carpetaSeleccionada = folder;
-            lblRutaCarpeta.setText(folder.getAbsolutePath());
+        var usuario = org.ni.edu.uam.casopracticog5.model.DataStore.getUsuarioActual();
+        if (lblSesionUsuario != null && usuario != null) {
+            lblSesionUsuario.setText(usuario.getUsername() + " (" + usuario.getRol() + ")");
         }
     }
 
     /**
-     * Requisito: Dialog tipo TextInputDialog para solicitar datos al usuario.
+     * Navegación hacia AdminUsuariosView.fxml dentro del contenedor central.
      */
     @FXML
-    public void onSolicitarObservaciones(ActionEvent event) {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Observaciones del Sistema");
-        dialog.setHeaderText("Gestión de Respaldos / Notas");
-        dialog.setContentText("Ingrese las observaciones o prefijo:");
-        if (rootPane != null && rootPane.getScene() != null && rootPane.getScene().getWindow() != null) {
-            dialog.initOwner(rootPane.getScene().getWindow());
+    public void onAbrirAdminUsuarios(ActionEvent event) {
+        if (!confirmarDescarteCambiosSiAplica()) {
+            return;
         }
-
-        Optional<String> resultado = dialog.showAndWait();
-        resultado.ifPresent(observacion -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Confirmación");
-            alert.setHeaderText("Observación Registrada");
-            alert.setContentText("Texto ingresado: " + observacion);
-            if (rootPane != null && rootPane.getScene() != null && rootPane.getScene().getWindow() != null) {
-                alert.initOwner(rootPane.getScene().getWindow());
-            }
-            alert.showAndWait();
-        });
+        cargarVista("/org/ni/edu/uam/casopracticog5/view/AdminUsuariosView.fxml");
     }
 
     /**
@@ -162,6 +126,7 @@ public class MainController {
         if (respuesta.isEmpty() || respuesta.get() != ButtonType.OK) {
             return;
         }
+        DataStore.setUsuarioActual(null);
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/ni/edu/uam/casopracticog5/view/LoginView.fxml"));
             Parent loginRoot = loader.load();
