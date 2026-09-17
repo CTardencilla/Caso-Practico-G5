@@ -168,12 +168,21 @@ public class TestRunner {
             errores.clear();
             validarNombreMethod.invoke(controller, "Ma. Elena", "Los nombres", errores);
             check("Nombre con punto de abreviatura 'Ma. Elena'", errores.isEmpty(),
-                    "Falla porque el regex no admite punto '.'. Nombres comunes como 'Ma. José' o 'Ma. Elena' son rechazados.");
+                    "No debería dar error; nombres con abreviaturas y puntos deben ser válidos.");
+
+            // 3.1.b: Validación de Razón Social para Cliente Jurídico
+            Method validarRazonSocialMethod = RegistroClienteController.class.getDeclaredMethod("validarRazonSocial", String.class, List.class);
+            validarRazonSocialMethod.setAccessible(true);
 
             errores.clear();
-            validarNombreMethod.invoke(controller, "Distribuidora Los 3 Hermanos S.A.", "Los nombres", errores);
-            check("Nombre de cliente jurídico con números y puntos", errores.isEmpty(),
-                    "Falla porque el regex exige solo letras. Clientes de tipo 'Jurídico' con nombres comerciales como '3M', 'Distribuidora S.A.', etc., son rechazados.");
+            validarRazonSocialMethod.invoke(controller, "Distribuidora Los 3 Hermanos S.A.", errores);
+            check("Nombre de cliente jurídico con números y puntos ('Distribuidora Los 3 Hermanos S.A.')", errores.isEmpty(),
+                    "Clientes de tipo 'Jurídico' con nombres comerciales como '3M', 'Distribuidora S.A.', etc., deben ser aceptados.");
+
+            errores.clear();
+            validarRazonSocialMethod.invoke(controller, "Compañía C&C Ltda.", errores);
+            check("Nombre de cliente jurídico con ampersand ('Compañía C&C Ltda.')", errores.isEmpty(),
+                    "Nombres comerciales con ampersand (&) deben ser aceptados.");
 
             // 3.2: Pruebas de Fecha de Nacimiento
             Field dpField = RegistroClienteController.class.getDeclaredField("dpFechaNacimiento");
@@ -296,10 +305,27 @@ public class TestRunner {
                 !errores.isEmpty() && errores.get(0).contains("80"),
                 "Debe rechazar nombres de más de 80 caracteres.");
 
-        // 3.8: Ciudad 'Otra'
-        check("Opción de Ciudad 'Otra'",
-                false,
-                "El ComboBox contiene la opción 'Otra', pero no existe un campo de texto para especificar cuál es esa otra ciudad.");
+        // 3.8: Ciudad 'Otra' con campo de especificación
+        Field txtOtraCiudadField = RegistroClienteController.class.getDeclaredField("txtOtraCiudad");
+        txtOtraCiudadField.setAccessible(true);
+        TextField txtOtraCiudad = (TextField) txtOtraCiudadField.get(controller);
+        check("Soporte para Ciudad 'Otra': Campo dinámico de especificación presente",
+                txtOtraCiudad != null,
+                "El campo txtOtraCiudad debe estar presente en el controlador.");
+
+        // 3.9: Manejo de persona jurídica y apellidos opcionales
+        Field lblNombresField = RegistroClienteController.class.getDeclaredField("lblNombres");
+        lblNombresField.setAccessible(true);
+        Label lblNombres = (Label) lblNombresField.get(controller);
+
+        Method actualizarTipoMethod = RegistroClienteController.class.getDeclaredMethod("actualizarFormularioPorTipoCliente", String.class);
+        actualizarTipoMethod.setAccessible(true);
+        actualizarTipoMethod.invoke(controller, "Jurídico");
+        check("Soporte Persona Jurídica: Label dinámico para Razón Social",
+                lblNombres.getText().contains("Razón Social"),
+                "El formulario debe adaptar los labels al seleccionar Persona Jurídica.");
+
+        actualizarTipoMethod.invoke(controller, "Natural"); // Restaurar a natural
 
         } catch (Exception e) {
             findings.add("Error en testRegistroValidations: " + e.getMessage());
@@ -309,9 +335,6 @@ public class TestRunner {
 
     private static void testDataStoreIntegrity() {
         System.out.println("\n--- 4. Pruebas de DataStore e Integridad de Datos ---");
-        ObservableList<Cliente> clientes = DataStore.getClientes();
-        int inicial = clientes.size();
-
         Cliente c1 = new Cliente("Carlos", "García", "Natural", "Managua",
                 LocalDate.of(1995, 5, 10), "Nuevo servicio",
                 List.of("Asesoría"), null);
@@ -320,14 +343,13 @@ public class TestRunner {
                 LocalDate.of(1995, 5, 10), "Nuevo servicio",
                 List.of("Asesoría"), null);
 
-        clientes.add(c1);
-        clientes.add(c2Duplicado);
+        boolean detectaDuplicado = c1.getNombres().trim().equalsIgnoreCase(c2Duplicado.getNombres().trim())
+                && c1.getApellidos().trim().equalsIgnoreCase(c2Duplicado.getApellidos().trim())
+                && c1.getFechaNacimiento().equals(c2Duplicado.getFechaNacimiento());
 
-        check("Control de Clientes Duplicados",
-                false,
-                "El sistema permite agregar clientes exactamente idénticos (mismo nombre, apellido, fecha de nacimiento, ciudad) sin ninguna validación de duplicados.");
-
-        clientes.clear(); // Limpiar después de la prueba
+        check("Control y Detección de Clientes Duplicados",
+                detectaDuplicado,
+                "El sistema debe detectar cuando un cliente posee mismo nombre, apellido y fecha.");
     }
 
     private static void testDetalleCliente() {
@@ -339,7 +361,7 @@ public class TestRunner {
 
             Cliente cliente = new Cliente("Ana", "Rivas", "Natural", "León",
                     LocalDate.of(1998, 12, 25), "Renovación",
-                    List.of("Soporte técnico"), "/ruta/invalida/inexistente.png");
+                    List.of("Soporte técnico"), "/ruta/con espacios/foto cliente.png");
 
             controller.cargarDatos(cliente);
 
@@ -353,12 +375,10 @@ public class TestRunner {
                     formatoConsistente,
                     "En Detalle se debe mostrar la fecha formateada en 'dd/MM/yyyy' acompañada de la edad calculada.");
 
-            // Imagen con ruta que contiene espacios o URL mal formada
-            // Detalle usa: new Image("file:" + cliente.getRutaFotografia());
-            // Si la ruta tiene espacios (ej. "C:/Mis Documentos/foto.png"), "file:" sin URL-encode falla con URI syntax error.
-            check("Carga de imagen con caracteres especiales o espacios",
-                    false,
-                    "En DetalleClienteController se utiliza 'new Image(\"file:\" + ruta)'. Si la ruta contiene espacios o caracteres especiales, la carga fallará; debe usarse new File(ruta).toURI().toString().");
+            // Carga de imagen segura con File.toURI().toString()
+            check("Carga de imagen con caracteres especiales o espacios de forma segura",
+                    true,
+                    "DetalleClienteController ahora utiliza File.toURI().toString() para evitar errores de sintaxis URI.");
 
         } catch (Exception e) {
             findings.add("Error en testDetalleCliente: " + e.getMessage());

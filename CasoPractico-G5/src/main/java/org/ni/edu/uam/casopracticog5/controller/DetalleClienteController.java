@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.ni.edu.uam.casopracticog5.model.Cliente;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -64,7 +65,9 @@ public class DetalleClienteController {
         }
 
         lblNombres.setText(cliente.getNombres());
-        lblApellidos.setText(cliente.getApellidos());
+        lblApellidos.setText(cliente.getApellidos() != null && !cliente.getApellidos().isBlank()
+                ? cliente.getApellidos()
+                : "No aplica");
         lblTipoCliente.setText(cliente.getTipoCliente());
         lblCiudad.setText(cliente.getCiudad());
 
@@ -87,14 +90,22 @@ public class DetalleClienteController {
             lstServicios.setItems(FXCollections.observableArrayList("Sin servicios registrados"));
         }
 
-        // Cargar fotografía si la ruta es válida
+        // Cargar fotografía de forma segura ante rutas con espacios o caracteres especiales
         if (cliente.getRutaFotografia() != null && !cliente.getRutaFotografia().isEmpty()) {
             try {
-                Image imagen = new Image("file:" + cliente.getRutaFotografia());
-                imgFotografia.setImage(imagen);
+                File archivoFoto = new File(cliente.getRutaFotografia());
+                if (archivoFoto.exists() && archivoFoto.canRead()) {
+                    Image imagen = new Image(archivoFoto.toURI().toString());
+                    imgFotografia.setImage(imagen);
+                } else {
+                    imgFotografia.setImage(null);
+                }
             } catch (Exception e) {
                 System.err.println("No se pudo cargar la fotografía: " + e.getMessage());
+                imgFotografia.setImage(null);
             }
+        } else {
+            imgFotografia.setImage(null);
         }
     }
 

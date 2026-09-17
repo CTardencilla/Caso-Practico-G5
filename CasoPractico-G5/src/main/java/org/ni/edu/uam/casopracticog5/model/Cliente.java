@@ -102,6 +102,9 @@ public class Cliente {
 
     @Override
     public String toString() {
+        if (apellidos == null || apellidos.isBlank()) {
+            return nombres != null ? nombres : "";
+        }
         return nombres + " " + apellidos;
     }
 }

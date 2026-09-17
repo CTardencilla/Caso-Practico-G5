@@ -21,13 +21,18 @@ import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class RegistroClienteController {
 
+    @FXML private Label lblNombres;
+    @FXML private Label lblApellidos;
+    @FXML private Label lblFechaNacimiento;
     @FXML private TextField txtNombres;
     @FXML private TextField txtApellidos;
     @FXML private ComboBox<String> cmbTipoCliente;
     @FXML private ComboBox<String> cmbCiudad;
+    @FXML private TextField txtOtraCiudad;
     @FXML private DatePicker dpFechaNacimiento;
     @FXML private ToggleGroup grupoSolicitud;
     @FXML private CheckBox chkAsesoria;
@@ -41,6 +46,7 @@ public class RegistroClienteController {
     @FXML
     public void initialize() {
         cmbTipoCliente.getItems().setAll("Natural", "Jurídico");
+        cmbTipoCliente.valueProperty().addListener((obs, antes, nuevo) -> actualizarFormularioPorTipoCliente(nuevo));
 
         cmbCiudad.getItems().setAll(
                 "Managua", "León", "Granada", "Masaya",
@@ -49,6 +55,17 @@ public class RegistroClienteController {
                 "Ocotal", "Somoto", "San Carlos", "Bluefields",
                 "Bilwi", "Otra"
         );
+
+        cmbCiudad.valueProperty().addListener((obs, antes, nuevo) -> {
+            boolean esOtra = "Otra".equals(nuevo);
+            if (txtOtraCiudad != null) {
+                txtOtraCiudad.setVisible(esOtra);
+                txtOtraCiudad.setManaged(esOtra);
+                if (!esOtra) {
+                    txtOtraCiudad.clear();
+                }
+            }
+        });
 
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/uuuu");
 
@@ -116,6 +133,22 @@ public class RegistroClienteController {
             if (parsed != null) {
                 dpFechaNacimiento.setValue(parsed);
             }
+        }
+    }
+
+    private void actualizarFormularioPorTipoCliente(String tipo) {
+        if ("Jurídico".equals(tipo)) {
+            if (lblNombres != null) lblNombres.setText("Razón Social / Empresa *");
+            txtNombres.setPromptText("Ej.: Distribuidora Los Hermanos S.A.");
+            if (lblApellidos != null) lblApellidos.setText("Apellidos (Opcional en Persona Jurídica)");
+            txtApellidos.setPromptText("No requerido para persona jurídica");
+            if (lblFechaNacimiento != null) lblFechaNacimiento.setText("Fecha de constitución / registro *");
+        } else {
+            if (lblNombres != null) lblNombres.setText("Nombres *");
+            txtNombres.setPromptText("Ej.: María José");
+            if (lblApellidos != null) lblApellidos.setText("Apellidos *");
+            txtApellidos.setPromptText("Ej.: Hernández López");
+            if (lblFechaNacimiento != null) lblFechaNacimiento.setText("Fecha de nacimiento *");
         }
     }
 
@@ -199,21 +232,41 @@ public class RegistroClienteController {
     private void guardarCliente() {
         String nombres = normalizar(txtNombres.getText());
         String apellidos = normalizar(txtApellidos.getText());
+        String tipoCliente = cmbTipoCliente.getValue();
 
         List<String> servicios = obtenerServicios();
         List<String> errores = new ArrayList<>();
 
-        validarNombre(nombres, "Los nombres", errores);
-        validarNombre(apellidos, "Los apellidos", errores);
-
-        if (cmbTipoCliente.getValue() == null
-                || !cmbTipoCliente.getItems().contains(cmbTipoCliente.getValue())) {
+        if (tipoCliente == null || !cmbTipoCliente.getItems().contains(tipoCliente)) {
             errores.add("Selecciona el tipo de cliente.");
+        } else if ("Jurídico".equals(tipoCliente)) {
+            validarRazonSocial(nombres, errores);
+            if (!apellidos.isBlank()) {
+                validarNombre(apellidos, "Los apellidos", errores);
+            }
+        } else {
+            validarNombre(nombres, "Los nombres", errores);
+            validarNombre(apellidos, "Los apellidos", errores);
         }
 
-        if (cmbCiudad.getValue() == null
-                || !cmbCiudad.getItems().contains(cmbCiudad.getValue())) {
+        String ciudadSeleccionada = cmbCiudad.getValue();
+        String ciudadFinal = ciudadSeleccionada;
+
+        if (ciudadSeleccionada == null || !cmbCiudad.getItems().contains(ciudadSeleccionada)) {
             errores.add("Selecciona la ciudad.");
+        } else if ("Otra".equals(ciudadSeleccionada)) {
+            String otra = normalizar(txtOtraCiudad != null ? txtOtraCiudad.getText() : "");
+            if (otra.isBlank()) {
+                errores.add("Has seleccionado 'Otra' como ciudad; por favor especifica el nombre de la ciudad.");
+            } else if (otra.length() < 2) {
+                errores.add("El nombre de la ciudad especificada debe tener al menos 2 caracteres.");
+            } else if (otra.length() > 50) {
+                errores.add("El nombre de la ciudad especificada debe tener como máximo 50 caracteres.");
+            } else if (!otra.matches("[\\p{L}\\p{M}.]+(?:[ '\\u2019.-][\\p{L}\\p{M}.]+)*")) {
+                errores.add("El nombre de la ciudad solo debe contener letras, espacios o guiones.");
+            } else {
+                ciudadFinal = otra;
+            }
         }
 
         sincronizarFechaDesdeEditor();
@@ -223,7 +276,7 @@ public class RegistroClienteController {
         validarFechaNacimiento(
                 fechaNacimiento,
                 textoEditor,
-                cmbTipoCliente.getValue(),
+                tipoCliente,
                 errores
         );
 
@@ -251,14 +304,33 @@ public class RegistroClienteController {
             return;
         }
 
+        // Control de clientes duplicados
+        boolean existeDuplicado = DataStore.getClientes().stream().anyMatch(c ->
+                c.getNombres().trim().equalsIgnoreCase(nombres.trim())
+                && (c.getApellidos() == null ? apellidos.isBlank() : c.getApellidos().trim().equalsIgnoreCase(apellidos.trim()))
+                && (c.getFechaNacimiento() != null && c.getFechaNacimiento().equals(fechaNacimiento))
+        );
+
+        if (existeDuplicado) {
+            Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmacion.initOwner(txtNombres.getScene().getWindow());
+            confirmacion.setTitle("Posible Cliente Duplicado");
+            confirmacion.setHeaderText("Cliente ya registrado");
+            confirmacion.setContentText("Ya existe un cliente registrado con el mismo nombre y fecha de nacimiento en el sistema.\n\n¿Deseas registrarlo de todas formas como un nuevo cliente?");
+            Optional<ButtonType> respuesta = confirmacion.showAndWait();
+            if (respuesta.isEmpty() || respuesta.get() != ButtonType.OK) {
+                return;
+            }
+        }
+
         RadioButton solicitud =
                 (RadioButton) grupoSolicitud.getSelectedToggle();
 
         Cliente cliente = new Cliente(
                 nombres,
                 apellidos,
-                cmbTipoCliente.getValue(),
-                cmbCiudad.getValue(),
+                tipoCliente,
+                ciudadFinal,
                 fechaNacimiento,
                 solicitud.getText(),
                 servicios,
@@ -284,14 +356,35 @@ public class RegistroClienteController {
         if (texto.isBlank()) {
             errores.add(campo + " son obligatorios.");
 
+        } else if (texto.length() < 2) {
+            errores.add(campo + " deben tener al menos 2 caracteres.");
+
         } else if (texto.length() > 80) {
             errores.add(campo + " deben tener como máximo 80 caracteres.");
 
-        } else if (!texto.matches(
-                "[\\p{L}\\p{M}]+(?:[ '\u2019-][\\p{L}\\p{M}]+)*"
-        )) {
+        } else if (!texto.matches("^[\\p{L}\\p{M}.,'’\\- ]+$")) {
             errores.add(
-                    campo + " deben contener letras; se permiten espacios, guiones y apóstrofos entre palabras."
+                    campo + " deben contener letras; se permiten espacios, guiones, puntos y apóstrofos entre palabras."
+            );
+        }
+    }
+
+    private void validarRazonSocial(
+            String texto,
+            List<String> errores
+    ) {
+        if (texto.isBlank()) {
+            errores.add("La razón social o nombre comercial es obligatorio.");
+
+        } else if (texto.length() < 2) {
+            errores.add("La razón social debe tener al menos 2 caracteres.");
+
+        } else if (texto.length() > 100) {
+            errores.add("La razón social debe tener como máximo 100 caracteres.");
+
+        } else if (!texto.matches("^[\\p{L}\\p{M}0-9.,&'’/\\- ]+$")) {
+            errores.add(
+                    "La razón social contiene caracteres inválidos. Se permiten letras, números, espacios, puntos, comas, guiones y ampersand (&)."
             );
         }
     }
@@ -356,6 +449,14 @@ public class RegistroClienteController {
         cmbTipoCliente.getSelectionModel().clearSelection();
         cmbCiudad.getSelectionModel().clearSelection();
 
+        if (txtOtraCiudad != null) {
+            txtOtraCiudad.clear();
+            txtOtraCiudad.setVisible(false);
+            txtOtraCiudad.setManaged(false);
+        }
+
+        actualizarFormularioPorTipoCliente("Natural");
+
         dpFechaNacimiento.setValue(null);
         dpFechaNacimiento.getEditor().clear();
         grupoSolicitud.selectToggle(null);
@@ -370,6 +471,18 @@ public class RegistroClienteController {
 
     @FXML
     private void cancelarRegistro() {
+        if (hayCambiosSinGuardar()) {
+            Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
+            alerta.initOwner(txtNombres.getScene().getWindow());
+            alerta.setTitle("Confirmar cancelación");
+            alerta.setHeaderText("¿Deseas cancelar el registro?");
+            alerta.setContentText("Hay datos ingresados en el formulario que no se han guardado. ¿Estás seguro de que deseas salir?");
+            Optional<ButtonType> respuesta = alerta.showAndWait();
+            if (respuesta.isEmpty() || respuesta.get() != ButtonType.OK) {
+                return;
+            }
+        }
+
         try {
             Parent menu = FXMLLoader.load(
                     getClass().getResource(
@@ -386,6 +499,21 @@ public class RegistroClienteController {
                     "No se pudo abrir el menú principal."
             );
         }
+    }
+
+    private boolean hayCambiosSinGuardar() {
+        return !txtNombres.getText().isBlank()
+                || !txtApellidos.getText().isBlank()
+                || cmbTipoCliente.getValue() != null
+                || cmbCiudad.getValue() != null
+                || (txtOtraCiudad != null && !txtOtraCiudad.getText().isBlank())
+                || dpFechaNacimiento.getValue() != null
+                || !dpFechaNacimiento.getEditor().getText().isBlank()
+                || grupoSolicitud.getSelectedToggle() != null
+                || chkAsesoria.isSelected()
+                || chkSoporte.isSelected()
+                || chkCapacitacion.isSelected()
+                || rutaFotografia != null;
     }
 
     private void mostrarAlerta(
