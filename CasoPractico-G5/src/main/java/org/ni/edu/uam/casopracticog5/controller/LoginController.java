@@ -44,4 +44,19 @@ public class LoginController {
             }
         }
     }
+
+    @FXML
+    public void salir(){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmación de Salida");
+        alert.setHeaderText("Estás a punto de salir del programa...");
+        alert.setContentText("¿Estás seguro que deseas salir del programa?"):
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                System.exit(0);
+            }
+        });
+    }
+
 }
