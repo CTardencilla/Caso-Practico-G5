@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -17,6 +18,7 @@ import org.ni.edu.uam.casopracticog5.model.DataStore;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Controlador de ConsultaClientesView.fxml (Integrante 4).
@@ -53,6 +55,20 @@ public class ConsultaClientesController {
         colCiudad.setCellValueFactory(new PropertyValueFactory<>("ciudad"));
         colFechaNacimiento.setCellValueFactory(new PropertyValueFactory<>("fechaNacimiento"));
         colTipoSolicitud.setCellValueFactory(new PropertyValueFactory<>("tipoSolicitud"));
+
+        // Formato consistente dd/MM/yyyy para la columna Fecha de Nacimiento
+        DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        colFechaNacimiento.setCellFactory(col -> new TableCell<Cliente, LocalDate>() {
+            @Override
+            protected void updateItem(LocalDate fecha, boolean vacio) {
+                super.updateItem(fecha, vacio);
+                if (vacio || fecha == null) {
+                    setText(null);
+                } else {
+                    setText(formatoFecha.format(fecha));
+                }
+            }
+        });
 
         // Vincular la tabla con la lista observable centralizada del DataStore
         tablaClientes.setItems(DataStore.getClientes());

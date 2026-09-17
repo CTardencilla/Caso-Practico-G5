@@ -15,7 +15,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,28 +61,62 @@ public class RegistroClienteController {
 
                     @Override
                     public LocalDate fromString(String texto) {
-                        return texto == null || texto.isBlank()
-                                ? null
-                                : LocalDate.parse(
-                                texto,
-                                formato.withResolverStyle(
-                                        java.time.format.ResolverStyle.STRICT
-                                )
-                        );
+                        if (texto == null || texto.isBlank()) {
+                            return null;
+                        }
+                        try {
+                            return LocalDate.parse(
+                                    texto.trim(),
+                                    formato.withResolverStyle(
+                                            ResolverStyle.STRICT
+                                    )
+                            );
+                        } catch (DateTimeParseException e) {
+                            return null;
+                        }
                     }
                 }
         );
 
+        // En el calendario emergente, deshabilitar fechas no válidas:
+        // No se permite: fechas futuras, la fecha de hoy, ni fechas mayores a 120 años en el pasado
         dpFechaNacimiento.setDayCellFactory(calendario -> new DateCell() {
             @Override
             public void updateItem(LocalDate fecha, boolean vacia) {
                 super.updateItem(fecha, vacia);
 
-                setDisable(
-                        vacia || fecha == null || fecha.isAfter(LocalDate.now())
-                );
+                if (vacia || fecha == null) {
+                    setDisable(true);
+                } else {
+                    LocalDate hoy = LocalDate.now();
+                    boolean noPermitida = !fecha.isBefore(hoy) || fecha.isBefore(hoy.minusYears(120));
+                    setDisable(noPermitida);
+                    if (noPermitida) {
+                        setStyle("-fx-background-color: #F0F0F0; -fx-text-fill: #BDBDBD;");
+                    }
+                }
             }
         });
+
+        // Sincronizar automáticamente cuando el usuario escribe en el editor y pierde el foco o presiona ENTER
+        dpFechaNacimiento.getEditor().focusedProperty().addListener((obs, antes, enfocado) -> {
+            if (!enfocado) {
+                sincronizarFechaDesdeEditor();
+            }
+        });
+        dpFechaNacimiento.getEditor().setOnAction(e -> sincronizarFechaDesdeEditor());
+    }
+
+    private void sincronizarFechaDesdeEditor() {
+        String texto = dpFechaNacimiento.getEditor().getText();
+        if (texto == null || texto.isBlank()) {
+            dpFechaNacimiento.setValue(null);
+        } else {
+            LocalDate parsed = dpFechaNacimiento.getConverter().fromString(texto);
+            if (parsed != null) {
+                dpFechaNacimiento.setValue(parsed);
+            }
+        }
     }
 
     @FXML
@@ -179,13 +216,16 @@ public class RegistroClienteController {
             errores.add("Selecciona la ciudad.");
         }
 
+        sincronizarFechaDesdeEditor();
         LocalDate fechaNacimiento = dpFechaNacimiento.getValue();
+        String textoEditor = dpFechaNacimiento.getEditor().getText();
 
-        if (fechaNacimiento == null) {
-            errores.add("Selecciona la fecha de nacimiento en el calendario.");
-        } else if (fechaNacimiento.isAfter(LocalDate.now())) {
-            errores.add("La fecha de nacimiento no puede ser futura.");
-        }
+        validarFechaNacimiento(
+                fechaNacimiento,
+                textoEditor,
+                cmbTipoCliente.getValue(),
+                errores
+        );
 
         if (grupoSolicitud.getSelectedToggle() == null) {
             errores.add("Selecciona el tipo de solicitud.");
@@ -256,6 +296,36 @@ public class RegistroClienteController {
         }
     }
 
+    private void validarFechaNacimiento(
+            LocalDate fechaNacimiento,
+            String textoEditor,
+            String tipoCliente,
+            List<String> errores
+    ) {
+        if (fechaNacimiento == null) {
+            if (textoEditor != null && !textoEditor.isBlank()) {
+                errores.add("La fecha de nacimiento es inválida o no existe. Ingresa una fecha real en formato dd/mm/aaaa.");
+            } else {
+                errores.add("Selecciona o ingresa la fecha de nacimiento.");
+            }
+            return;
+        }
+
+        LocalDate hoy = LocalDate.now();
+        if (fechaNacimiento.isAfter(hoy)) {
+            errores.add("La fecha de nacimiento no puede ser futura.");
+        } else if (fechaNacimiento.isEqual(hoy)) {
+            errores.add("La fecha de nacimiento no puede ser la fecha de hoy.");
+        } else if (fechaNacimiento.isBefore(hoy.minusYears(120))) {
+            errores.add("La fecha de nacimiento no es válida (el límite máximo es 120 años en el pasado).");
+        } else {
+            int edad = Period.between(fechaNacimiento, hoy).getYears();
+            if ("Natural".equals(tipoCliente) && edad < 18) {
+                errores.add("El cliente persona natural debe ser mayor de edad (al menos 18 años). Edad actual calculada: " + edad + " años.");
+            }
+        }
+    }
+
     private String normalizar(String texto) {
         return texto == null
                 ? ""
@@ -287,6 +357,7 @@ public class RegistroClienteController {
         cmbCiudad.getSelectionModel().clearSelection();
 
         dpFechaNacimiento.setValue(null);
+        dpFechaNacimiento.getEditor().clear();
         grupoSolicitud.selectToggle(null);
 
         chkAsesoria.setSelected(false);

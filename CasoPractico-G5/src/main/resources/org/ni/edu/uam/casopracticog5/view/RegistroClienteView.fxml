@@ -164,13 +164,13 @@
                                                                style="-fx-text-fill: #5C6BC0; -fx-font-weight: bold;"/>
 
                                                         <DatePicker fx:id="dpFechaNacimiento"
-                                                                    editable="false"
+                                                                    editable="true"
                                                                     promptText="dd/mm/aaaa"
                                                                     prefHeight="40.0"
                                                                     maxWidth="1.7976931348623157E308"
                                                                     style="-fx-background-color: #FFFFFF; -fx-background-radius: 7; -fx-border-color: #D6DBED; -fx-border-radius: 7; -fx-padding: 3;"/>
 
-                                                        <Label text="Selecciona la fecha utilizando el calendario."
+                                                        <Label text="Escribe la fecha (dd/mm/aaaa) o selecciónala en el calendario."
                                                                wrapText="true"
                                                                style="-fx-font-size: 11px; -fx-text-fill: #7986CB; -fx-font-style: italic;"/>
                                                     </children>

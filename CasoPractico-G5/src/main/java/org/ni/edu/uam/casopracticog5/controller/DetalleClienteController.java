@@ -10,6 +10,10 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.ni.edu.uam.casopracticog5.model.Cliente;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Controlador de DetalleClienteView.fxml (Integrante 4).
  * Recibe un objeto Cliente desde otra ventana y muestra su información detallada.
@@ -64,9 +68,12 @@ public class DetalleClienteController {
         lblTipoCliente.setText(cliente.getTipoCliente());
         lblCiudad.setText(cliente.getCiudad());
 
-        // Formatear fecha de nacimiento como texto
+        // Formatear fecha de nacimiento consistente en dd/MM/yyyy y mostrar edad calculada
         if (cliente.getFechaNacimiento() != null) {
-            lblFechaNacimiento.setText(cliente.getFechaNacimiento().toString());
+            LocalDate fecha = cliente.getFechaNacimiento();
+            DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            int edad = Period.between(fecha, LocalDate.now()).getYears();
+            lblFechaNacimiento.setText(formato.format(fecha) + " (" + edad + " años)");
         } else {
             lblFechaNacimiento.setText("No disponible");
         }
