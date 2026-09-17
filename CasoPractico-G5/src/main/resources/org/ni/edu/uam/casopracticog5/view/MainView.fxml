@@ -1,95 +1,147 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
 
-<BorderPane fx:id="rootPane" prefHeight="650.0" prefWidth="900.0"
+<BorderPane fx:id="rootPane" prefHeight="700.0" prefWidth="980.0"
+            style="-fx-background-color: #F5F7FB; -fx-font-family: 'Segoe UI', sans-serif;"
             xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.ni.edu.uam.casopracticog5.controller.MainController">
 
-    <!-- Área Superior: MenuBar y ToolBar -->
+    <!-- Área Superior: MenuBar Índigo + ToolBar estilizada -->
     <top>
         <VBox>
-            <!-- Menú Principal -->
-            <MenuBar>
-                <menus>
-                    <Menu text="Archivo">
-                        <items>
-                            <MenuItem onAction="#onSeleccionarCarpeta" text="Seleccionar carpeta de respaldos..." />
-                            <MenuItem onAction="#onSolicitarObservaciones" text="Agregar observación general..." />
-                            <SeparatorMenuItem />
-                            <MenuItem onAction="#onCerrarSesion" text="Cerrar sesión" />
-                            <MenuItem onAction="#onSalir" text="Salir" />
-                        </items>
-                    </Menu>
+            <children>
+                <!-- MenuBar institucional índigo -->
+                <MenuBar style="-fx-background-color: #3F51B5; -fx-padding: 4 8 4 8;">
+                    <menus>
+                        <Menu text="Archivo" style="-fx-text-fill: white;">
+                            <items>
+                                <MenuItem onAction="#onSeleccionarCarpeta" text="Seleccionar carpeta de respaldos..." />
+                                <MenuItem onAction="#onSolicitarObservaciones" text="Agregar observación general..." />
+                                <SeparatorMenuItem />
+                                <MenuItem onAction="#onCerrarSesion" text="Cerrar sesión" />
+                                <MenuItem onAction="#onSalir" text="Salir" />
+                            </items>
+                        </Menu>
 
-                    <Menu text="Navegación">
-                        <items>
-                            <MenuItem onAction="#onAbrirRegistro" text="Registro de Clientes" />
-                            <MenuItem onAction="#onAbrirConsulta" text="Consulta de Clientes" />
-                        </items>
-                    </Menu>
+                        <Menu text="Navegación">
+                            <items>
+                                <MenuItem onAction="#onAbrirRegistro" text="Registro de Clientes" />
+                                <MenuItem onAction="#onAbrirConsulta" text="Consulta de Clientes" />
+                            </items>
+                        </Menu>
 
-                    <Menu text="Ayuda">
-                        <items>
-                            <MenuItem onAction="#onAcercaDe" text="Acerca del Sistema" />
-                        </items>
-                    </Menu>
-                </menus>
-            </MenuBar>
+                        <Menu text="Ayuda">
+                            <items>
+                                <MenuItem onAction="#onAcercaDe" text="Acerca del Sistema" />
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
 
-            <!-- Barra de Herramientas de Acceso Rápido -->
-            <ToolBar>
-                <items>
-                    <Button onAction="#onAbrirRegistro" text="Nuevo Cliente" />
-                    <Button onAction="#onAbrirConsulta" text="Consultar Clientes" />
-                    <Button onAction="#onSeleccionarCarpeta" text="Ruta Respaldo" />
-                    <Button onAction="#onSolicitarObservaciones" text="Observaciones" />
-                </items>
-            </ToolBar>
+                <!-- ToolBar moderna con fondo Índigo suave (#E8EAF6) -->
+                <ToolBar style="-fx-background-color: #E8EAF6; -fx-padding: 8 16 8 16; -fx-border-color: #C5CAE9; -fx-border-width: 0 0 1 0;">
+                    <items>
+                        <Button onAction="#onAbrirRegistro" text="Nuevo Cliente"
+                                style="-fx-background-color: #3F51B5; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 14 6 14;" />
+
+                        <Button onAction="#onAbrirConsulta" text="Consultar Clientes"
+                                style="-fx-background-color: #5C6BC0; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 6 14 6 14;" />
+
+                        <Separator orientation="VERTICAL">
+                            <padding>
+                                <Insets left="6.0" right="6.0" />
+                            </padding>
+                        </Separator>
+
+                        <Button onAction="#onSeleccionarCarpeta" text="Ruta Respaldo"
+                                style="-fx-background-color: #FFFFFF; -fx-text-fill: #3F51B5; -fx-border-color: #5C6BC0; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 5 12 5 12;" />
+
+                        <Button onAction="#onSolicitarObservaciones" text="Observaciones"
+                                style="-fx-background-color: #FFFFFF; -fx-text-fill: #3F51B5; -fx-border-color: #5C6BC0; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 5 12 5 12;" />
+                    </items>
+                    <effect>
+                        <DropShadow height="8.0" radius="3.5" width="8.0">
+                            <color>
+                                <Color red="0.0" green="0.0" blue="0.0" opacity="0.06" />
+                            </color>
+                        </DropShadow>
+                    </effect>
+                </ToolBar>
+            </children>
         </VBox>
     </top>
 
-    <!-- Área Central: Contenedor Dinámico -->
+    <!-- Área Central Dinámica con Tarjeta Blanca Redondeada -->
     <center>
-        <StackPane fx:id="contentArea" style="-fx-background-color: #f4f6f8;">
+        <StackPane fx:id="contentArea" style="-fx-background-color: #F5F7FB; -fx-padding: 24;">
             <children>
-                <Label fx:id="lblBienvenida"
-                       text="Bienvenido al Sistema de Gestión de Clientes. Use el menú o la barra superior para navegar."
-                       textAlignment="CENTER"
-                       wrapText="true"
-                       style="-fx-font-size: 16px; -fx-text-fill: #555555;">
-                    <contextMenu>
-                        <ContextMenu>
-                            <items>
-                                <MenuItem onAction="#onAbrirRegistro" text="Ir a Registro" />
-                                <MenuItem onAction="#onAbrirConsulta" text="Ir a Consulta" />
-                                <SeparatorMenuItem />
-                                <MenuItem onAction="#onLimpiarVista" text="Volver al Inicio" />
-                            </items>
-                        </ContextMenu>
-                    </contextMenu>
-                </Label>
+                <!-- Tarjeta contenedora de bienvenida -->
+                <VBox alignment="CENTER" maxWidth="560.0" maxHeight="320.0" spacing="14.0"
+                      style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-padding: 32; -fx-border-color: #E8EAF6; -fx-border-radius: 12; -fx-border-width: 1;">
+                    <effect>
+                        <DropShadow height="24.0" radius="11.5" width="24.0">
+                            <color>
+                                <Color red="0.247" green="0.317" blue="0.709" opacity="0.12" />
+                            </color>
+                        </DropShadow>
+                    </effect>
+                    <children>
+                        <!-- Título Índigo Principal -->
+                        <Label text="Módulo de Navegación y Gestión"
+                               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #3F51B5;" />
+
+                        <!-- Mensaje descriptivo -->
+                        <Label fx:id="lblBienvenida" alignment="CENTER" textAlignment="CENTER" wrapText="true"
+                               text="Bienvenido al Sistema de Control de Clientes. Utilice el menú superior, la barra de herramientas o haga clic derecho para navegar entre módulos."
+                               style="-fx-font-size: 14px; -fx-text-fill: #333333; -fx-line-spacing: 3px;">
+                            <contextMenu>
+                                <ContextMenu>
+                                    <items>
+                                        <MenuItem onAction="#onAbrirRegistro" text="Ir a Registro" />
+                                        <MenuItem onAction="#onAbrirConsulta" text="Ir a Consulta" />
+                                        <SeparatorMenuItem />
+                                        <MenuItem onAction="#onLimpiarVista" text="Volver al Inicio" />
+                                    </items>
+                                </ContextMenu>
+                            </contextMenu>
+                        </Label>
+
+                        <Region prefHeight="10.0" />
+
+                        <!-- Indicación en texto secundario índigo pálido (#7986CB) -->
+                        <Label text="Tip: Presione clic derecho sobre esta área para ver el menú contextual."
+                               style="-fx-font-size: 12px; -fx-font-style: italic; -fx-text-fill: #7986CB;" />
+                    </children>
+                </VBox>
             </children>
         </StackPane>
     </center>
 
-    <!-- Área Inferior: Barra de Estado con la ruta elegida -->
+    <!-- Barra Inferior de Estado: Fondo Índigo Suave (#E8EAF6) -->
     <bottom>
-        <HBox spacing="10.0" style="-fx-background-color: #e0e0e0; -fx-padding: 6 12 6 12;">
+        <HBox alignment="CENTER_LEFT" spacing="12.0"
+              style="-fx-background-color: #E8EAF6; -fx-padding: 8 16 8 16; -fx-border-color: #C5CAE9; -fx-border-width: 1 0 0 0;">
             <children>
-                <Label style="-fx-font-weight: bold;" text="Carpeta de reportes:" />
-                <Label fx:id="lblRutaCarpeta" text="Ninguna carpeta seleccionada" textOverrun="ELLIPSIS" />
+                <Label style="-fx-font-weight: bold; -fx-text-fill: #3F51B5; -fx-font-size: 12px;" text="Carpeta de reportes:" />
+                <Label fx:id="lblRutaCarpeta" text="Ninguna carpeta seleccionada" textOverrun="ELLIPSIS"
+                       style="-fx-text-fill: #333333; -fx-font-size: 12px;" />
             </children>
         </HBox>
     </bottom>
