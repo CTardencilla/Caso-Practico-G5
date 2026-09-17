@@ -5,6 +5,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.ni.edu.uam.casopracticog5.model.Cliente;
+import org.ni.edu.uam.casopracticog5.model.DataStore;
 
 import java.time.LocalDate;
 
@@ -42,5 +43,8 @@ public class ConsultaClientesController {
         colCiudad.setCellValueFactory(new PropertyValueFactory<>("ciudad"));
         colFechaNacimiento.setCellValueFactory(new PropertyValueFactory<>("fechaNacimiento"));
         colTipoSolicitud.setCellValueFactory(new PropertyValueFactory<>("tipoSolicitud"));
+
+        // Vincular la tabla con la lista observable centralizada del DataStore
+        tablaClientes.setItems(DataStore.getClientes());
     }
 }
