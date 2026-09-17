@@ -50,7 +50,7 @@ public class LoginController {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmación de Salida");
         alert.setHeaderText("Estás a punto de salir del programa...");
-        alert.setContentText("¿Estás seguro que deseas salir del programa?"):
+        alert.setContentText("¿Estás seguro que deseas salir del programa?");
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -59,4 +59,11 @@ public class LoginController {
         });
     }
 
+    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String contenido){
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(contenido);
+        alert.showAndWait();
+    }
 }
