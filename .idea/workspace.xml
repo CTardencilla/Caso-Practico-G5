@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b944f6c3-2e48-48ab-8d3a-7f0549b57f81" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CasoPractico-G5/src/main/resources/org/ni/edu/uam/casopracticog5/images/usuarioG.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CasoPractico-G5/src/main/resources/org/ni/edu/uam/casopracticog5/view/LoginView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/CasoPractico-G5/src/main/resources/org/ni/edu/uam/casopracticog5/view/LoginView.fxml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="22" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0000000000000007" />
+      <entry key="S10" value="1.0000000236579563" />
+      <entry key="S30" value="1.002971384481924" />
+      <entry key="S60" value="1.0895798004957549" />
+      <entry key="M2" value="1.9338664937851822" />
+      <entry key="M5" value="5.779467405199945" />
+      <entry key="M10" value="9.5634147259961" />
+      <entry key="M15" value="11.659080480860665" />
+      <entry key="M30" value="15.446395732928565" />
+      <entry key="H1" value="24.749729126184725" />
+      <entry key="H2" value="45.574985782659425" />
+      <entry key="H4" value="70.43206395282785" />
+      <entry key="D1" value="107.0591970312314" />
+      <entry key="W1" value="115.5146737705982" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="5.111683046356735E-287" />
+      <entry key="S2" value="3.9130958771912365E-72" />
+      <entry key="S5" value="4.0827606072640165E-29" />
+      <entry key="S10" value="9.012572929315201E-15" />
+      <entry key="S30" value="3.301522898434979E-5" />
+      <entry key="S60" value="0.008125315053130164" />
+      <entry key="M2" value="0.12747564461708927" />
+      <entry key="M5" value="0.6664273028699863" />
+      <entry key="M10" value="1.2076242931385528" />
+      <entry key="M15" value="1.566559434489344" />
+      <entry key="M30" value="2.284003281730935" />
+      <entry key="H1" value="3.1509695036043643" />
+      <entry key="H2" value="4.2195368500773895" />
+      <entry key="H4" value="5.251153565787093" />
+      <entry key="D1" value="6.637376284981902" />
+      <entry key="W1" value="6.946078822041986" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.0037212421798591307" />
+      <entry key="MS500" value="0.32669131347329333" />
+      <entry key="S2" value="0.7560219359959194" />
+      <entry key="S5" value="0.8941569544626119" />
+      <entry key="S10" value="0.9455987507487563" />
+      <entry key="S30" value="0.9844888096712878" />
+      <entry key="S60" value="1.0873972464958932" />
+      <entry key="M2" value="2.049646725910991" />
+      <entry key="M5" value="6.428577129821584" />
+      <entry key="M10" value="10.755963485991169" />
+      <entry key="M15" value="13.213023741305214" />
+      <entry key="M30" value="17.72153850712788" />
+      <entry key="H1" value="27.89322678106706" />
+      <entry key="H2" value="49.78751036988798" />
+      <entry key="H4" value="75.67777940929975" />
+      <entry key="D1" value="113.69519506180986" />
+      <entry key="W1" value="122.46054017098855" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3JQQ4h1r6JDnTUoYKCYTf44wZI8" />
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.MainApp.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "feature/login",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/choco/OneDrive/Documentos/Ingeniería en Sistemas de Información/Caso-Practico-G5",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\choco\OneDrive\Documentos\Ingeniería en Sistemas de Información\Caso-Practico-G5\CasoPractico-G5\src\main\resources\org\ni\edu\uam\casopracticog5\images" />
+      <recent name="C:\Users\choco\OneDrive\Documentos\Ingeniería en Sistemas de Información\Caso-Practico-G5\CasoPractico-G5\src\main\resources\org\ni\edu\uam\casopracticog5\iconos" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="Caso-Practico-G5" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="Caso-Practico-G5" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-a203e0a19954-intellij.indexing.shared.core-IU-262.10315.125" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.10315.125" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b944f6c3-2e48-48ab-8d3a-7f0549b57f81" name="Changes" comment="" />
+      <created>1789590623115</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1789590623115</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
