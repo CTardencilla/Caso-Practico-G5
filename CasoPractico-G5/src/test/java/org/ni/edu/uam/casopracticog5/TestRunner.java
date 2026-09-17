@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import org.ni.edu.uam.casopracticog5.controller.LoginController;
 import org.ni.edu.uam.casopracticog5.controller.RegistroClienteController;
 import org.ni.edu.uam.casopracticog5.model.Cliente;
@@ -389,6 +390,41 @@ public class TestRunner {
                     formatoConsistente,
                     "En Detalle se debe mostrar la fecha formateada en 'dd/MM/yyyy' acompañada de la edad calculada.");
 
+            // Fallback a defaultUser.png cuando no hay foto
+            Field imgFotoField = controller.getClass().getDeclaredField("imgFotografia");
+            imgFotoField.setAccessible(true);
+            ImageView imgFoto = (ImageView) imgFotoField.get(controller);
+            check("Detalle: Asignación automática de defaultUser.png si no hay foto",
+                    imgFoto.getImage() != null,
+                    "Cuando el cliente no tiene fotografía, debe cargarse la imagen predeterminada.");
+
+            // Coherencia semántica: Persona Jurídica adapta sus etiquetas
+            Cliente clienteJuridico = new Cliente(
+                    "Soluciones Digitales S.A.",
+                    "",
+                    "Jurídico",
+                    "León",
+                    LocalDate.of(2010, 5, 20),
+                    "Empresarial",
+                    List.of("Soporte"),
+                    null
+            );
+            controller.cargarDatos(clienteJuridico);
+
+            Field lblTituloNomField = controller.getClass().getDeclaredField("lblTituloNombres");
+            lblTituloNomField.setAccessible(true);
+            Label lblTituloNom = (Label) lblTituloNomField.get(controller);
+
+            Field lblTituloFechaField = controller.getClass().getDeclaredField("lblTituloFecha");
+            lblTituloFechaField.setAccessible(true);
+            Label lblTituloFecha = (Label) lblTituloFechaField.get(controller);
+
+            boolean labelsJuridico = lblTituloNom.getText().contains("Razón Social")
+                    && lblTituloFecha.getText().contains("Constitución");
+            check("Detalle: Adaptación semántica para Cliente Jurídico (Razón Social y Constitución)",
+                    labelsJuridico,
+                    "Para clientes jurídicos, las etiquetas deben decir Razón Social y Fecha de Constitución.");
+
             // Carga de imagen segura con File.toURI().toString()
             check("Carga de imagen con caracteres especiales o espacios de forma segura",
                     true,
@@ -426,6 +462,34 @@ public class TestRunner {
             check("Consulta: Formato de Fecha en Tabla es dd/MM/yyyy ('05/10/1995')",
                     formatoCorrecto,
                     "La columna de la tabla debe mostrar '05/10/1995' en lugar del formato ISO.");
+
+            // Formato de Apellidos: Persona Jurídica o sin apellido muestra "No aplica"
+            Field colApellidosField = controller.getClass().getDeclaredField("colApellidos");
+            colApellidosField.setAccessible(true);
+            TableColumn<Cliente, String> colApellidos = (TableColumn<Cliente, String>) colApellidosField.get(controller);
+
+            TableCell<Cliente, String> cellApellidos = colApellidos.getCellFactory().call(colApellidos);
+            updateItemMethod.invoke(cellApellidos, "", false);
+            boolean formatoApellidoVacio = "No aplica".equals(cellApellidos.getText());
+            check("Consulta: Columna Apellidos muestra 'No aplica' para registros sin apellido",
+                    formatoApellidoVacio,
+                    "Los clientes jurídicos o sin apellido deben mostrar 'No aplica' en la tabla.");
+
+            // Búsqueda en tiempo real
+            Field txtBuscarField = controller.getClass().getDeclaredField("txtBuscar");
+            txtBuscarField.setAccessible(true);
+            TextField txtBuscar = (TextField) txtBuscarField.get(controller);
+            check("Consulta: Campo de búsqueda rápida presente en la interfaz",
+                    txtBuscar != null,
+                    "Consulta debe ofrecer un campo de texto de búsqueda reactiva.");
+
+            // Botón Ver Detalle
+            Field btnDetalleField = controller.getClass().getDeclaredField("btnVerDetalle");
+            btnDetalleField.setAccessible(true);
+            Button btnDetalle = (Button) btnDetalleField.get(controller);
+            check("Consulta: Botón 'Ver Detalle' deshabilitado si no hay fila seleccionada",
+                    btnDetalle != null && btnDetalle.isDisabled(),
+                    "El botón 'Ver Detalle' debe iniciar deshabilitado si no se ha seleccionado ninguna fila.");
 
         } catch (Exception e) {
             findings.add("Error en testConsultaClientes: " + e.getMessage());

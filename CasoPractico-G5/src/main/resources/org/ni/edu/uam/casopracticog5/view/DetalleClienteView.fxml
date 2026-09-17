@@ -59,8 +59,8 @@
                         <ColumnConstraints minWidth="180" prefWidth="220"/>
                     </columnConstraints>
 
-                    <!-- Fila 0: Nombres -->
-                    <Label text="Nombres:"
+                    <!-- Fila 0: Nombres / Razón Social -->
+                    <Label fx:id="lblTituloNombres" text="Nombres:"
                            style="-fx-font-weight: bold; -fx-text-fill: #5C6BC0; -fx-font-size: 13px; -fx-font-family: 'Segoe UI';"
                            GridPane.columnIndex="0" GridPane.rowIndex="0"/>
                     <Label fx:id="lblNombres"
@@ -68,7 +68,7 @@
                            GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
                     <!-- Fila 1: Apellidos -->
-                    <Label text="Apellidos:"
+                    <Label fx:id="lblTituloApellidos" text="Apellidos:"
                            style="-fx-font-weight: bold; -fx-text-fill: #5C6BC0; -fx-font-size: 13px; -fx-font-family: 'Segoe UI';"
                            GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                     <Label fx:id="lblApellidos"
@@ -91,8 +91,8 @@
                            style="-fx-font-size: 13px; -fx-text-fill: #333333; -fx-font-family: 'Segoe UI';"
                            GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
-                    <!-- Fila 4: Fecha de Nacimiento -->
-                    <Label text="Fecha de Nacimiento:"
+                    <!-- Fila 4: Fecha de Nacimiento / Constitución -->
+                    <Label fx:id="lblTituloFecha" text="Fecha de Nacimiento:"
                            style="-fx-font-weight: bold; -fx-text-fill: #5C6BC0; -fx-font-size: 13px; -fx-font-family: 'Segoe UI';"
                            GridPane.columnIndex="0" GridPane.rowIndex="4"/>
                     <Label fx:id="lblFechaNacimiento"
@@ -125,6 +125,8 @@
                     </padding>
                     <ImageView fx:id="imgFotografia" fitWidth="170" fitHeight="190" preserveRatio="true"
                                style="-fx-effect: dropshadow(gaussian, rgba(63,81,181,0.25), 8, 0, 0, 2);"/>
+                    <Label fx:id="lblEstadoFoto" text=""
+                           style="-fx-font-size: 11px; -fx-text-fill: #7986CB; -fx-font-style: italic; -fx-padding: 8 0 0 0;"/>
                 </VBox>
             </VBox>
 

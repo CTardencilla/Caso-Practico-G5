@@ -22,7 +22,13 @@ import java.time.format.DateTimeFormatter;
 public class DetalleClienteController {
 
     @FXML
+    private Label lblTituloNombres;
+
+    @FXML
     private Label lblNombres;
+
+    @FXML
+    private Label lblTituloApellidos;
 
     @FXML
     private Label lblApellidos;
@@ -32,6 +38,9 @@ public class DetalleClienteController {
 
     @FXML
     private Label lblCiudad;
+
+    @FXML
+    private Label lblTituloFecha;
 
     @FXML
     private Label lblFechaNacimiento;
@@ -44,6 +53,9 @@ public class DetalleClienteController {
 
     @FXML
     private ImageView imgFotografia;
+
+    @FXML
+    private Label lblEstadoFoto;
 
     @FXML
     private Button btnCerrar;
@@ -64,24 +76,38 @@ public class DetalleClienteController {
             return;
         }
 
-        lblNombres.setText(cliente.getNombres());
+        boolean esJuridico = "Jurídico".equalsIgnoreCase(cliente.getTipoCliente());
+
+        // Adaptación semántica de etiquetas según Persona Natural o Jurídica
+        if (lblTituloNombres != null) {
+            lblTituloNombres.setText(esJuridico ? "Razón Social:" : "Nombres:");
+        }
+        if (lblTituloApellidos != null) {
+            lblTituloApellidos.setText(esJuridico ? "Representante / Apellidos:" : "Apellidos:");
+        }
+        if (lblTituloFecha != null) {
+            lblTituloFecha.setText(esJuridico ? "Fecha de Constitución:" : "Fecha de Nacimiento:");
+        }
+
+        lblNombres.setText(cliente.getNombres() != null ? cliente.getNombres() : "");
         lblApellidos.setText(cliente.getApellidos() != null && !cliente.getApellidos().isBlank()
                 ? cliente.getApellidos()
                 : "No aplica");
-        lblTipoCliente.setText(cliente.getTipoCliente());
-        lblCiudad.setText(cliente.getCiudad());
+        lblTipoCliente.setText(cliente.getTipoCliente() != null ? cliente.getTipoCliente() : "");
+        lblCiudad.setText(cliente.getCiudad() != null ? cliente.getCiudad() : "");
 
-        // Formatear fecha de nacimiento consistente en dd/MM/yyyy y mostrar edad calculada
+        // Formatear fecha de nacimiento consistente en dd/MM/yyyy y mostrar años calculados
         if (cliente.getFechaNacimiento() != null) {
             LocalDate fecha = cliente.getFechaNacimiento();
             DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            int edad = Period.between(fecha, LocalDate.now()).getYears();
-            lblFechaNacimiento.setText(formato.format(fecha) + " (" + edad + " años)");
+            int anios = Period.between(fecha, LocalDate.now()).getYears();
+            String sufijo = esJuridico ? " (" + anios + " años de constitución)" : " (" + anios + " años)";
+            lblFechaNacimiento.setText(formato.format(fecha) + sufijo);
         } else {
             lblFechaNacimiento.setText("No disponible");
         }
 
-        lblTipoSolicitud.setText(cliente.getTipoSolicitud());
+        lblTipoSolicitud.setText(cliente.getTipoSolicitud() != null ? cliente.getTipoSolicitud() : "");
 
         // Cargar lista de servicios en el ListView
         if (cliente.getServicios() != null && !cliente.getServicios().isEmpty()) {
@@ -90,21 +116,43 @@ public class DetalleClienteController {
             lstServicios.setItems(FXCollections.observableArrayList("Sin servicios registrados"));
         }
 
-        // Cargar fotografía de forma segura ante rutas con espacios o caracteres especiales
-        if (cliente.getRutaFotografia() != null && !cliente.getRutaFotografia().isEmpty()) {
+        // Cargar fotografía del cliente o usar defaultUser.png si no tiene
+        cargarFotografia(cliente.getRutaFotografia());
+    }
+
+    private void cargarFotografia(String ruta) {
+        if (ruta != null && !ruta.isBlank()) {
             try {
-                File archivoFoto = new File(cliente.getRutaFotografia());
+                File archivoFoto = new File(ruta);
                 if (archivoFoto.exists() && archivoFoto.canRead()) {
                     Image imagen = new Image(archivoFoto.toURI().toString());
-                    imgFotografia.setImage(imagen);
-                } else {
-                    imgFotografia.setImage(null);
+                    if (!imagen.isError()) {
+                        imgFotografia.setImage(imagen);
+                        if (lblEstadoFoto != null) {
+                            lblEstadoFoto.setText("");
+                        }
+                        return;
+                    }
                 }
             } catch (Exception e) {
-                System.err.println("No se pudo cargar la fotografía: " + e.getMessage());
+                System.err.println("No se pudo cargar la fotografía personalizada: " + e.getMessage());
+            }
+        }
+        cargarImagenPredeterminada();
+    }
+
+    private void cargarImagenPredeterminada() {
+        try {
+            var url = getClass().getResource("/org/ni/edu/uam/casopracticog5/images/defaultUser.png");
+            if (url != null) {
+                imgFotografia.setImage(new Image(url.toExternalForm()));
+                if (lblEstadoFoto != null) {
+                    lblEstadoFoto.setText("Foto predeterminada");
+                }
+            } else {
                 imgFotografia.setImage(null);
             }
-        } else {
+        } catch (Exception e) {
             imgFotografia.setImage(null);
         }
     }

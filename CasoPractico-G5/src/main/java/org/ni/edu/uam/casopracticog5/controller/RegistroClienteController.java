@@ -122,6 +122,7 @@ public class RegistroClienteController {
             }
         });
         dpFechaNacimiento.getEditor().setOnAction(e -> sincronizarFechaDesdeEditor());
+        cargarImagenPredeterminada();
     }
 
     private void sincronizarFechaDesdeEditor() {
@@ -223,9 +224,22 @@ public class RegistroClienteController {
 
     @FXML
     private void quitarFotografia() {
-        imgFotografia.setImage(null);
+        cargarImagenPredeterminada();
         rutaFotografia = null;
         lblFotografia.setText("Sin fotografía seleccionada");
+    }
+
+    private void cargarImagenPredeterminada() {
+        try {
+            var url = getClass().getResource("/org/ni/edu/uam/casopracticog5/images/defaultUser.png");
+            if (url != null) {
+                imgFotografia.setImage(new javafx.scene.image.Image(url.toExternalForm()));
+            } else {
+                imgFotografia.setImage(null);
+            }
+        } catch (Exception e) {
+            imgFotografia.setImage(null);
+        }
     }
 
     @FXML
