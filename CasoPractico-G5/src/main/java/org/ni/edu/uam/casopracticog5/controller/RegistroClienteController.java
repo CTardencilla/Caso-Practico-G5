@@ -1,6 +1,8 @@
 package org.ni.edu.uam.casopracticog5.controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -36,30 +38,46 @@ public class RegistroClienteController {
     @FXML
     public void initialize() {
         cmbTipoCliente.getItems().setAll("Natural", "Jurídico");
-        cmbCiudad.getItems().setAll("Managua", "León", "Granada", "Masaya",
-                "Estelí", "Matagalpa", "Chinandega", "Jinotepe", "Rivas",
-                "Juigalpa", "Boaco", "Jinotega", "Ocotal", "Somoto",
-                "San Carlos", "Bluefields", "Bilwi", "Otra");
+
+        cmbCiudad.getItems().setAll(
+                "Managua", "León", "Granada", "Masaya",
+                "Estelí", "Matagalpa", "Chinandega", "Jinotepe",
+                "Rivas", "Juigalpa", "Boaco", "Jinotega",
+                "Ocotal", "Somoto", "San Carlos", "Bluefields",
+                "Bilwi", "Otra"
+        );
 
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/uuuu");
-        dpFechaNacimiento.setConverter(new javafx.util.StringConverter<LocalDate>() {
-            @Override
-            public String toString(LocalDate fecha) {
-                return fecha == null ? "" : formato.format(fecha);
-            }
 
-            @Override
-            public LocalDate fromString(String texto) {
-                return texto == null || texto.isBlank() ? null
-                        : LocalDate.parse(texto, formato.withResolverStyle(
-                        java.time.format.ResolverStyle.STRICT));
-            }
-        });
+        dpFechaNacimiento.setConverter(
+                new javafx.util.StringConverter<LocalDate>() {
+                    @Override
+                    public String toString(LocalDate fecha) {
+                        return fecha == null ? "" : formato.format(fecha);
+                    }
+
+                    @Override
+                    public LocalDate fromString(String texto) {
+                        return texto == null || texto.isBlank()
+                                ? null
+                                : LocalDate.parse(
+                                texto,
+                                formato.withResolverStyle(
+                                        java.time.format.ResolverStyle.STRICT
+                                )
+                        );
+                    }
+                }
+        );
+
         dpFechaNacimiento.setDayCellFactory(calendario -> new DateCell() {
             @Override
             public void updateItem(LocalDate fecha, boolean vacia) {
                 super.updateItem(fecha, vacia);
-                setDisable(vacia || fecha == null || fecha.isAfter(LocalDate.now()));
+
+                setDisable(
+                        vacia || fecha == null || fecha.isAfter(LocalDate.now())
+                );
             }
         });
     }
@@ -68,38 +86,68 @@ public class RegistroClienteController {
     private void seleccionarFotografia() {
         FileChooser selector = new FileChooser();
         selector.setTitle("Seleccionar fotografía del cliente");
-        selector.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-                "Imágenes (PNG, JPG, GIF, BMP)", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp",
-                "*.PNG", "*.JPG", "*.JPEG", "*.GIF", "*.BMP"));
-        File archivo = selector.showOpenDialog(txtNombres.getScene().getWindow());
+
+        selector.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter(
+                        "Imágenes (PNG, JPG, GIF, BMP)",
+                        "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp",
+                        "*.PNG", "*.JPG", "*.JPEG", "*.GIF", "*.BMP"
+                )
+        );
+
+        File archivo = selector.showOpenDialog(
+                txtNombres.getScene().getWindow()
+        );
+
         if (archivo == null) {
             return;
         }
+
         try {
             if (!archivo.isFile() || !archivo.canRead()) {
-                mostrarAlerta(Alert.AlertType.ERROR, "Fotografía no disponible",
-                        "Selecciona un archivo de imagen que se pueda leer.");
+                mostrarAlerta(
+                        Alert.AlertType.ERROR,
+                        "Fotografía no disponible",
+                        "Selecciona un archivo de imagen que se pueda leer."
+                );
                 return;
             }
+
             if (Files.size(archivo.toPath()) > 5L * 1024 * 1024) {
-                mostrarAlerta(Alert.AlertType.WARNING, "Fotografía demasiado grande",
-                        "La fotografía debe pesar como máximo 5 MB.");
+                mostrarAlerta(
+                        Alert.AlertType.WARNING,
+                        "Fotografía demasiado grande",
+                        "La fotografía debe pesar como máximo 5 MB."
+                );
                 return;
             }
+
             try (InputStream entrada = Files.newInputStream(archivo.toPath())) {
                 Image imagen = new Image(entrada, 400, 400, true, true);
-                if (imagen.isError() || imagen.getWidth() == 0 || imagen.getHeight() == 0) {
-                    mostrarAlerta(Alert.AlertType.ERROR, "Imagen no válida",
-                            "No se pudo abrir la imagen. Selecciona un archivo PNG, JPG, GIF o BMP válido.");
+
+                if (imagen.isError()
+                        || imagen.getWidth() == 0
+                        || imagen.getHeight() == 0) {
+
+                    mostrarAlerta(
+                            Alert.AlertType.ERROR,
+                            "Imagen no válida",
+                            "No se pudo abrir la imagen. Selecciona un archivo PNG, JPG, GIF o BMP válido."
+                    );
                     return;
                 }
+
                 imgFotografia.setImage(imagen);
                 rutaFotografia = archivo.getAbsolutePath();
                 lblFotografia.setText(archivo.getName());
             }
+
         } catch (IOException | SecurityException ex) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error al abrir la fotografía",
-                    "No se pudo leer el archivo. Comprueba que esté disponible e inténtalo nuevamente.");
+            mostrarAlerta(
+                    Alert.AlertType.ERROR,
+                    "Error al abrir la fotografía",
+                    "No se pudo leer el archivo. Comprueba que esté disponible e inténtalo nuevamente."
+            );
         }
     }
 
@@ -114,8 +162,10 @@ public class RegistroClienteController {
     private void guardarCliente() {
         String nombres = normalizar(txtNombres.getText());
         String apellidos = normalizar(txtApellidos.getText());
+
         List<String> servicios = obtenerServicios();
         List<String> errores = new ArrayList<>();
+
         validarNombre(nombres, "Los nombres", errores);
         validarNombre(apellidos, "Los apellidos", errores);
 
@@ -123,61 +173,108 @@ public class RegistroClienteController {
                 || !cmbTipoCliente.getItems().contains(cmbTipoCliente.getValue())) {
             errores.add("Selecciona el tipo de cliente.");
         }
+
         if (cmbCiudad.getValue() == null
                 || !cmbCiudad.getItems().contains(cmbCiudad.getValue())) {
             errores.add("Selecciona la ciudad.");
         }
+
         LocalDate fechaNacimiento = dpFechaNacimiento.getValue();
+
         if (fechaNacimiento == null) {
             errores.add("Selecciona la fecha de nacimiento en el calendario.");
         } else if (fechaNacimiento.isAfter(LocalDate.now())) {
             errores.add("La fecha de nacimiento no puede ser futura.");
         }
+
         if (grupoSolicitud.getSelectedToggle() == null) {
             errores.add("Selecciona el tipo de solicitud.");
         }
+
         if (servicios.isEmpty()) {
             errores.add("Selecciona al menos un servicio de interés.");
         }
-        if (rutaFotografia != null && !Files.isReadable(new File(rutaFotografia).toPath())) {
-            errores.add("La fotografía ya no está disponible. Selecciónala nuevamente o quítala.");
+
+        if (rutaFotografia != null
+                && !Files.isReadable(new File(rutaFotografia).toPath())) {
+            errores.add(
+                    "La fotografía ya no está disponible. Selecciónala nuevamente o quítala."
+            );
         }
+
         if (!errores.isEmpty()) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Revisa los datos del cliente",
-                    "• " + String.join("\n• ", errores));
+            mostrarAlerta(
+                    Alert.AlertType.WARNING,
+                    "Revisa los datos del cliente",
+                    "• " + String.join("\n• ", errores)
+            );
             return;
         }
 
-        RadioButton solicitud = (RadioButton) grupoSolicitud.getSelectedToggle();
-        Cliente cliente = new Cliente(nombres, apellidos, cmbTipoCliente.getValue(),
-                cmbCiudad.getValue(), fechaNacimiento, solicitud.getText(), servicios, rutaFotografia);
+        RadioButton solicitud =
+                (RadioButton) grupoSolicitud.getSelectedToggle();
+
+        Cliente cliente = new Cliente(
+                nombres,
+                apellidos,
+                cmbTipoCliente.getValue(),
+                cmbCiudad.getValue(),
+                fechaNacimiento,
+                solicitud.getText(),
+                servicios,
+                rutaFotografia
+        );
+
         DataStore.getClientes().add(cliente);
+
         limpiarFormulario();
-        mostrarAlerta(Alert.AlertType.INFORMATION, "Registro exitoso",
-                "El cliente " + cliente + " fue registrado correctamente.");
+
+        mostrarAlerta(
+                Alert.AlertType.INFORMATION,
+                "Registro exitoso",
+                "El cliente " + cliente + " fue registrado correctamente."
+        );
     }
 
-    private void validarNombre(String texto, String campo, List<String> errores) {
+    private void validarNombre(
+            String texto,
+            String campo,
+            List<String> errores
+    ) {
         if (texto.isBlank()) {
             errores.add(campo + " son obligatorios.");
+
         } else if (texto.length() > 80) {
             errores.add(campo + " deben tener como máximo 80 caracteres.");
-        } else if (!texto.matches("[\\p{L}\\p{M}]+(?:[ '\u2019-][\\p{L}\\p{M}]+)*")) {
-            errores.add(campo + " deben contener letras; se permiten espacios, guiones y apóstrofos entre palabras.");
+
+        } else if (!texto.matches(
+                "[\\p{L}\\p{M}]+(?:[ '\u2019-][\\p{L}\\p{M}]+)*"
+        )) {
+            errores.add(
+                    campo + " deben contener letras; se permiten espacios, guiones y apóstrofos entre palabras."
+            );
         }
     }
 
     private String normalizar(String texto) {
-        return texto == null ? "" : texto.strip().replaceAll("\\s+", " ");
+        return texto == null
+                ? ""
+                : texto.strip().replaceAll("\\s+", " ");
     }
 
     private List<String> obtenerServicios() {
         List<String> servicios = new ArrayList<>();
-        for (CheckBox casilla : List.of(chkAsesoria, chkSoporte, chkCapacitacion)) {
+
+        for (CheckBox casilla : List.of(
+                chkAsesoria,
+                chkSoporte,
+                chkCapacitacion
+        )) {
             if (casilla.isSelected()) {
                 servicios.add(casilla.getText());
             }
         }
+
         return servicios;
     }
 
@@ -185,25 +282,58 @@ public class RegistroClienteController {
     private void limpiarFormulario() {
         txtNombres.clear();
         txtApellidos.clear();
+
         cmbTipoCliente.getSelectionModel().clearSelection();
         cmbCiudad.getSelectionModel().clearSelection();
+
         dpFechaNacimiento.setValue(null);
         grupoSolicitud.selectToggle(null);
+
         chkAsesoria.setSelected(false);
         chkSoporte.setSelected(false);
         chkCapacitacion.setSelected(false);
+
         quitarFotografia();
         txtNombres.requestFocus();
     }
 
-    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
+    @FXML
+    private void cancelarRegistro() {
+        try {
+            Parent menu = FXMLLoader.load(
+                    getClass().getResource(
+                            "/org/ni/edu/uam/casopracticog5/view/MainView.fxml"
+                    )
+            );
+
+            txtNombres.getScene().setRoot(menu);
+
+        } catch (IOException ex) {
+            mostrarAlerta(
+                    Alert.AlertType.ERROR,
+                    "Error de navegación",
+                    "No se pudo abrir el menú principal."
+            );
+        }
+    }
+
+    private void mostrarAlerta(
+            Alert.AlertType tipo,
+            String titulo,
+            String mensaje
+    ) {
         Alert alerta = new Alert(tipo);
+
         alerta.initOwner(txtNombres.getScene().getWindow());
         alerta.setTitle(titulo);
         alerta.setHeaderText(titulo);
         alerta.setContentText(mensaje);
         alerta.setResizable(true);
-        alerta.getDialogPane().setMinHeight(javafx.scene.layout.Region.USE_PREF_SIZE);
+
+        alerta.getDialogPane().setMinHeight(
+                javafx.scene.layout.Region.USE_PREF_SIZE
+        );
+
         alerta.showAndWait();
     }
 }
