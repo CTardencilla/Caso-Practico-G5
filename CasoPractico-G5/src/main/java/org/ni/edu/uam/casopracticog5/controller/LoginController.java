@@ -40,7 +40,7 @@ public class LoginController {
 
         if (usuario == null || usuario.trim().isEmpty() || password == null || password.trim().isEmpty()) {
             mostrarAlerta(Alert.AlertType.ERROR, "Error de Valicación", "Por favor, completa los campos solicitados.");
-        }else {
+        }else if (usuario.equals("admin") && password.equals("12345")) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/ni/edu/uam/casopracticog5/view/MainView.fxml"));
                 Parent root = loader.load();
