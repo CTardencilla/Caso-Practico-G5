@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
@@ -121,7 +122,11 @@ public class MainController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/ni/edu/uam/casopracticog5/view/LoginView.fxml"));
             Parent loginRoot = loader.load();
             Stage stage = (Stage) rootPane.getScene().getWindow();
-            stage.getScene().setRoot(loginRoot);
+            Scene scene = new Scene(loginRoot);
+            stage.setScene(scene);
+            stage.setTitle("Sistema de Gestión de Clientes");
+            stage.sizeToScene();
+            stage.centerOnScreen();
         } catch (IOException e) {
             mostrarAlertaError("No se pudo cargar la vista de Login: " + e.getMessage());
         }

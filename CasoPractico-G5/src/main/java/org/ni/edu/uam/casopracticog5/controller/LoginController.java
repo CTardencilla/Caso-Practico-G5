@@ -10,14 +10,15 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 
-
 public class LoginController {
+
+    @FXML
+    private AnchorPane panelPrincipal;
 
     @FXML
     private TextField txtUsuario;
@@ -28,19 +29,46 @@ public class LoginController {
     @FXML
     public void detectarEnter(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
-            iniciarSesion();
+            // Si el foco está en el usuario y la contraseña está vacía, pasa el foco a la contraseña
+            if (event.getSource() == txtUsuario && (txtPassword.getText() == null || txtPassword.getText().trim().isEmpty())) {
+                txtPassword.requestFocus();
+            } else {
+                iniciarSesion();
+            }
         }
+    }
+
+    /**
+     * Valida si las credenciales coinciden con las autorizadas en el sistema.
+     * Método público para facilitar la verificación y pruebas unitarias.
+     *
+     * @param usuario  Nombre de usuario
+     * @param password Contraseña
+     * @return true si las credenciales son válidas, false en caso contrario
+     */
+    public boolean autenticar(String usuario, String password) {
+        if (usuario == null || password == null) {
+            return false;
+        }
+        return usuario.trim().equals("admin") && password.equals("12345");
     }
 
     @FXML
     public void iniciarSesion() {
+        String usuario = txtUsuario.getText() != null ? txtUsuario.getText().trim() : "";
+        String password = txtPassword.getText() != null ? txtPassword.getText() : "";
 
-        String usuario = txtUsuario.getText();
-        String password = txtPassword.getText();
+        if (usuario.isEmpty() || password.trim().isEmpty()) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Error de Validación", "Por favor, completa todos los campos para iniciar sesión.");
+            if (usuario.isEmpty()) {
+                txtUsuario.requestFocus();
+            } else {
+                txtPassword.requestFocus();
+            }
+            return;
+        }
 
-        if (usuario == null || usuario.trim().isEmpty() || password == null || password.trim().isEmpty()) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error de Valicación", "Por favor, completa los campos solicitados.");
-        }else if (usuario.equals("admin") && password.equals("12345")) {
+        if (autenticar(usuario, password)) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/ni/edu/uam/casopracticog5/view/MainView.fxml"));
                 Parent root = loader.load();
@@ -49,20 +77,30 @@ public class LoginController {
                 Scene scene = new Scene(root);
 
                 stageActual.setScene(scene);
-                stageActual.setTitle("Ventana Principal");
+                stageActual.setTitle("Sistema de Gestión de Clientes - Principal");
+                stageActual.sizeToScene();
+                stageActual.centerOnScreen();
                 stageActual.show();
             } catch (IOException e) {
-                mostrarAlerta(Alert.AlertType.ERROR, "Error de Valicación", "No se pudo cargar la ventana principal.");
+                mostrarAlerta(Alert.AlertType.ERROR, "Error del Sistema", "No se pudo cargar la ventana principal: " + e.getMessage());
             }
+        } else {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error de Autenticación", "Usuario o contraseña incorrectos. Por favor, verifica tus datos.");
+            txtPassword.clear();
+            txtPassword.requestFocus();
         }
     }
 
     @FXML
-    public void salir(){
+    public void salir() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmación de Salida");
         alert.setHeaderText("Estás a punto de salir del programa...");
-        alert.setContentText("¿Estás seguro que deseas salir del programa?");
+        alert.setContentText("¿Estás seguro de que deseas salir del sistema?");
+
+        if (txtUsuario != null && txtUsuario.getScene() != null && txtUsuario.getScene().getWindow() != null) {
+            alert.initOwner(txtUsuario.getScene().getWindow());
+        }
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -71,11 +109,16 @@ public class LoginController {
         });
     }
 
-    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String contenido){
+    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String contenido) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
         alert.setHeaderText(null);
         alert.setContentText(contenido);
+
+        if (txtUsuario != null && txtUsuario.getScene() != null && txtUsuario.getScene().getWindow() != null) {
+            alert.initOwner(txtUsuario.getScene().getWindow());
+        }
+
         alert.showAndWait();
     }
 }

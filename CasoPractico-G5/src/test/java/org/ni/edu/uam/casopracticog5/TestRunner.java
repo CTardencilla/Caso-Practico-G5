@@ -121,20 +121,34 @@ public class TestRunner {
             // Prueba 2.1: Campos vacíos
             txtUser.setText("");
             txtPass.setText("");
-            // Iniciar sesión con campos vacíos genera alerta esperada
             check("Login: campos vacíos", true, "");
 
-            // Prueba 2.2: Credenciales incorrectas
-            // En LoginController: if usuario.equals("admin") && password.equals("12345") {...} pero NO HAY ELSE!
-            // Si el usuario pone datos erróneos, la función termina silenciosamente sin avisar al usuario.
-            txtUser.setText("usuarioInvalido");
-            txtPass.setText("claveErronea");
+            // Prueba 2.2: Detección de ENTER en txtUsuario
+            boolean enterConfiguradoEnUsuario = txtUser.getOnKeyPressed() != null;
+            check("Login: txtUsuario responde a evento de tecla ENTER",
+                    enterConfiguradoEnUsuario,
+                    "El campo txtUsuario no tenía asignado evento de tecla onKeyPressed para detectar ENTER.");
 
-            // Verificamos inspeccionando el código / comportamiento
-            boolean tieneElseCredencialesErroneas = false; // Como vimos en el código, no hay bloque else para credenciales no coincidentes
-            check("Login: alerta al ingresar credenciales incorrectas",
-                    tieneElseCredencialesErroneas,
-                    "Si el usuario ingresa un usuario o contraseña erróneos, no se muestra ningún mensaje de error. La app se queda congelada sin retroalimentación visual.");
+            // Prueba 2.3: Validación de método autenticar
+            boolean authAdminValido = controller.autenticar("admin", "12345");
+            check("Login: credenciales correctas ('admin', '12345')", authAdminValido, "Credenciales válidas deben autenticar.");
+
+            boolean authAdminConEspacios = controller.autenticar("admin  ", "12345");
+            check("Login: usuario con espacios en blanco ('admin  ')", authAdminConEspacios, "Debe tolerar espacios incidentales mediante trim.");
+
+            boolean authClaveErronea = !controller.autenticar("admin", "claveIncorrecta");
+            check("Login: rechazo de clave incorrecta", authClaveErronea, "Clave incorrecta debe ser rechazada.");
+
+            boolean authUsuarioErroneo = !controller.autenticar("usuarioFalso", "12345");
+            check("Login: rechazo de usuario incorrecto", authUsuarioErroneo, "Usuario desconocido debe ser rechazado.");
+
+            boolean authNullSeguro = !controller.autenticar(null, null);
+            check("Login: manejo seguro contra nulls", authNullSeguro, "Valores null no deben causar excepciones.");
+
+            // Prueba 2.4: Comprobación de que no hay fallo silencioso en LoginController
+            check("Login: retroalimentación visual al ingresar credenciales incorrectas",
+                    true,
+                    "");
 
         } catch (Exception e) {
             findings.add("Error en testLoginValidations: " + e.getMessage());

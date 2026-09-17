@@ -32,7 +32,7 @@
                   <Insets left="15.0" right="10.0" />
                </HBox.margin>
             </ImageView>
-            <TextField fx:id="txtUsuario" prefHeight="45.0" prefWidth="220.0" promptText="Usuario" style="-fx-background-color: transparent; -fx-text-fill: #333333;">
+            <TextField fx:id="txtUsuario" onKeyPressed="#detectarEnter" prefHeight="45.0" prefWidth="220.0" promptText="Usuario" style="-fx-background-color: transparent; -fx-text-fill: #333333;">
                <font>
                   <Font name="Segoe UI" size="14.0" />
                </font>
