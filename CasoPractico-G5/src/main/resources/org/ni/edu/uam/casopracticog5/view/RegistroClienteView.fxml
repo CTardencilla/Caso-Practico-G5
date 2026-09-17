@@ -1,9 +1,382 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.ni.edu.uam.casopracticog5.controller.RegistroClienteController">
-    <Label text="RegistroClienteView — Placeholder"/>
-</VBox>
+<BorderPane prefHeight="780.0"
+            prefWidth="1000.0"
+            style="-fx-background-color: #F5F7FB; -fx-font-family: 'Segoe UI'; -fx-font-size: 13px; -fx-text-base-color: #333333; -fx-accent: #3F51B5; -fx-focus-color: #5C6BC0; -fx-faint-focus-color: transparent;"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.ni.edu.uam.casopracticog5.controller.RegistroClienteController">
+
+    <top>
+        <VBox spacing="6.0"
+              style="-fx-background-color: #3F51B5; -fx-effect: dropshadow(gaussian, rgba(63,81,181,0.22), 12, 0.0, 0, 3);">
+
+            <padding>
+                <Insets top="22.0"
+                        right="28.0"
+                        bottom="22.0"
+                        left="28.0"/>
+            </padding>
+
+            <children>
+                <Label text="Registro de clientes"
+                       style="-fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF;"/>
+
+                <Label text="Completa la información para registrar un nuevo cliente."
+                       wrapText="true"
+                       style="-fx-font-size: 13px; -fx-text-fill: #E8EAF6;"/>
+            </children>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true"
+                    hbarPolicy="NEVER"
+                    vbarPolicy="AS_NEEDED"
+                    style="-fx-background-color: #F5F7FB; -fx-background: #F5F7FB; -fx-border-width: 0; -fx-padding: 0;">
+
+            <content>
+                <VBox spacing="20.0"
+                      style="-fx-background-color: #F5F7FB;">
+
+                    <padding>
+                        <Insets top="24.0"
+                                right="28.0"
+                                bottom="24.0"
+                                left="28.0"/>
+                    </padding>
+
+                    <children>
+                        <GridPane hgap="22.0">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="65.0"
+                                                   hgrow="ALWAYS"/>
+                                <ColumnConstraints percentWidth="35.0"
+                                                   hgrow="ALWAYS"/>
+                            </columnConstraints>
+
+                            <children>
+                                <VBox spacing="0.0"
+                                      GridPane.columnIndex="0"
+                                      GridPane.rowIndex="0"
+                                      GridPane.valignment="TOP"
+                                      style="-fx-background-color: #FFFFFF; -fx-background-radius: 14; -fx-effect: dropshadow(gaussian, rgba(63,81,181,0.10), 14, 0.0, 0, 3);">
+
+                                    <children>
+                                        <Label text="Datos personales"
+                                               maxWidth="1.7976931348623157E308"
+                                               style="-fx-background-color: #E8EAF6; -fx-background-radius: 14 14 0 0; -fx-padding: 15 20; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #3F51B5;"/>
+
+                                        <VBox spacing="17.0">
+                                            <padding>
+                                                <Insets top="20.0"
+                                                        right="20.0"
+                                                        bottom="22.0"
+                                                        left="20.0"/>
+                                            </padding>
+
+                                            <children>
+                                                <VBox spacing="7.0">
+                                                    <children>
+                                                        <Label text="Nombres *"
+                                                               style="-fx-text-fill: #5C6BC0; -fx-font-weight: bold;"/>
+
+                                                        <TextField fx:id="txtNombres"
+                                                                   promptText="Ej.: María José"
+                                                                   prefHeight="40.0"
+                                                                   style="-fx-background-color: #FFFFFF; -fx-background-radius: 7; -fx-border-color: #D6DBED; -fx-border-radius: 7; -fx-padding: 9 12; -fx-text-fill: #333333; -fx-prompt-text-fill: #9FA8DA;"/>
+                                                    </children>
+                                                </VBox>
+
+                                                <VBox spacing="7.0">
+                                                    <children>
+                                                        <Label text="Apellidos *"
+                                                               style="-fx-text-fill: #5C6BC0; -fx-font-weight: bold;"/>
+
+                                                        <TextField fx:id="txtApellidos"
+                                                                   promptText="Ej.: Hernández López"
+                                                                   prefHeight="40.0"
+                                                                   style="-fx-background-color: #FFFFFF; -fx-background-radius: 7; -fx-border-color: #D6DBED; -fx-border-radius: 7; -fx-padding: 9 12; -fx-text-fill: #333333; -fx-prompt-text-fill: #9FA8DA;"/>
+                                                    </children>
+                                                </VBox>
+
+                                                <GridPane hgap="16.0">
+                                                    <columnConstraints>
+                                                        <ColumnConstraints percentWidth="50.0"
+                                                                           hgrow="ALWAYS"/>
+                                                        <ColumnConstraints percentWidth="50.0"
+                                                                           hgrow="ALWAYS"/>
+                                                    </columnConstraints>
+
+                                                    <children>
+                                                        <VBox spacing="7.0"
+                                                              GridPane.columnIndex="0">
+                                                            <children>
+                                                                <Label text="Tipo de cliente *"
+                                                                       style="-fx-text-fill: #5C6BC0; -fx-font-weight: bold;"/>
+
+                                                                <ComboBox fx:id="cmbTipoCliente"
+                                                                          promptText="Selecciona un tipo"
+                                                                          prefHeight="40.0"
+                                                                          maxWidth="1.7976931348623157E308"
+                                                                          style="-fx-background-color: #FFFFFF; -fx-background-radius: 7; -fx-border-color: #D6DBED; -fx-border-radius: 7; -fx-padding: 3 6;"/>
+                                                            </children>
+                                                        </VBox>
+
+                                                        <VBox spacing="7.0"
+                                                              GridPane.columnIndex="1">
+                                                            <children>
+                                                                <Label text="Ciudad *"
+                                                                       style="-fx-text-fill: #5C6BC0; -fx-font-weight: bold;"/>
+
+                                                                <ComboBox fx:id="cmbCiudad"
+                                                                          promptText="Selecciona una ciudad"
+                                                                          prefHeight="40.0"
+                                                                          maxWidth="1.7976931348623157E308"
+                                                                          style="-fx-background-color: #FFFFFF; -fx-background-radius: 7; -fx-border-color: #D6DBED; -fx-border-radius: 7; -fx-padding: 3 6;"/>
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </GridPane>
+
+                                                <VBox spacing="7.0">
+                                                    <children>
+                                                        <Label text="Fecha de nacimiento *"
+                                                               style="-fx-text-fill: #5C6BC0; -fx-font-weight: bold;"/>
+
+                                                        <DatePicker fx:id="dpFechaNacimiento"
+                                                                    editable="false"
+                                                                    promptText="dd/mm/aaaa"
+                                                                    prefHeight="40.0"
+                                                                    maxWidth="1.7976931348623157E308"
+                                                                    style="-fx-background-color: #FFFFFF; -fx-background-radius: 7; -fx-border-color: #D6DBED; -fx-border-radius: 7; -fx-padding: 3;"/>
+
+                                                        <Label text="Selecciona la fecha utilizando el calendario."
+                                                               wrapText="true"
+                                                               style="-fx-font-size: 11px; -fx-text-fill: #7986CB; -fx-font-style: italic;"/>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="0.0"
+                                      GridPane.columnIndex="1"
+                                      GridPane.rowIndex="0"
+                                      GridPane.valignment="TOP"
+                                      style="-fx-background-color: #FFFFFF; -fx-background-radius: 14; -fx-effect: dropshadow(gaussian, rgba(63,81,181,0.10), 14, 0.0, 0, 3);">
+
+                                    <children>
+                                        <Label text="Fotografía del cliente"
+                                               maxWidth="1.7976931348623157E308"
+                                               style="-fx-background-color: #E8EAF6; -fx-background-radius: 14 14 0 0; -fx-padding: 15 20; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #3F51B5;"/>
+
+                                        <VBox spacing="12.0"
+                                              alignment="TOP_CENTER">
+
+                                            <padding>
+                                                <Insets top="20.0"
+                                                        right="20.0"
+                                                        bottom="20.0"
+                                                        left="20.0"/>
+                                            </padding>
+
+                                            <children>
+                                                <StackPane minHeight="185.0"
+                                                           prefHeight="185.0"
+                                                           style="-fx-background-color: #F5F7FB; -fx-background-radius: 10; -fx-border-color: #D6DBED; -fx-border-radius: 10;">
+
+                                                    <children>
+                                                        <ImageView fx:id="imgFotografia"
+                                                                   fitWidth="175.0"
+                                                                   fitHeight="170.0"
+                                                                   preserveRatio="true"
+                                                                   smooth="true"/>
+                                                    </children>
+                                                </StackPane>
+
+                                                <Label fx:id="lblFotografia"
+                                                       text="Sin fotografía seleccionada"
+                                                       wrapText="true"
+                                                       maxWidth="250.0"
+                                                       alignment="CENTER"
+                                                       textAlignment="CENTER"
+                                                       style="-fx-text-fill: #7986CB; -fx-font-size: 12px;"/>
+
+                                                <Button text="Seleccionar fotografía"
+                                                        onAction="#seleccionarFotografia"
+                                                        prefHeight="38.0"
+                                                        maxWidth="1.7976931348623157E308"
+                                                        style="-fx-background-color: #E8EAF6; -fx-background-radius: 8; -fx-text-fill: #3F51B5; -fx-font-weight: bold; -fx-cursor: hand;"/>
+
+                                                <Button text="Quitar fotografía"
+                                                        onAction="#quitarFotografia"
+                                                        prefHeight="30.0"
+                                                        maxWidth="1.7976931348623157E308"
+                                                        style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-text-fill: #7986CB; -fx-cursor: hand;"/>
+
+                                                <Label text="Opcional · PNG, JPG, GIF o BMP&#10;Tamaño máximo: 5 MB"
+                                                       wrapText="true"
+                                                       textAlignment="CENTER"
+                                                       style="-fx-font-size: 11px; -fx-text-fill: #7986CB; -fx-font-style: italic;"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </GridPane>
+
+                        <VBox spacing="0.0"
+                              style="-fx-background-color: #FFFFFF; -fx-background-radius: 14; -fx-effect: dropshadow(gaussian, rgba(63,81,181,0.10), 14, 0.0, 0, 3);">
+
+                            <children>
+                                <Label text="Solicitud y servicios de interés"
+                                       maxWidth="1.7976931348623157E308"
+                                       style="-fx-background-color: #E8EAF6; -fx-background-radius: 14 14 0 0; -fx-padding: 15 20; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #3F51B5;"/>
+
+                                <GridPane hgap="24.0"
+                                          vgap="16.0">
+
+                                    <padding>
+                                        <Insets top="20.0"
+                                                right="20.0"
+                                                bottom="20.0"
+                                                left="20.0"/>
+                                    </padding>
+
+                                    <columnConstraints>
+                                        <ColumnConstraints percentWidth="42.0"
+                                                           hgrow="ALWAYS"/>
+                                        <ColumnConstraints percentWidth="58.0"
+                                                           hgrow="ALWAYS"/>
+                                    </columnConstraints>
+
+                                    <children>
+                                        <VBox spacing="12.0"
+                                              GridPane.columnIndex="0"
+                                              GridPane.valignment="TOP">
+
+                                            <children>
+                                                <Label text="Tipo de solicitud *"
+                                                       style="-fx-text-fill: #5C6BC0; -fx-font-weight: bold;"/>
+
+                                                <FlowPane hgap="20.0"
+                                                          vgap="12.0">
+
+                                                    <children>
+                                                        <RadioButton text="Nuevo servicio"
+                                                                     style="-fx-text-fill: #333333; -fx-cursor: hand;">
+                                                            <toggleGroup>
+                                                                <ToggleGroup fx:id="grupoSolicitud" />
+                                                            </toggleGroup>
+                                                        </RadioButton>
+
+                                                        <RadioButton text="Renovación"
+                                                                     toggleGroup="$grupoSolicitud"
+                                                                     style="-fx-text-fill: #333333; -fx-cursor: hand;"/>
+                                                    </children>
+                                                </FlowPane>
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="12.0"
+                                              GridPane.columnIndex="1"
+                                              GridPane.valignment="TOP">
+
+                                            <children>
+                                                <Label text="Servicios de interés *"
+                                                       style="-fx-text-fill: #5C6BC0; -fx-font-weight: bold;"/>
+
+                                                <FlowPane hgap="18.0"
+                                                          vgap="12.0">
+
+                                                    <children>
+                                                        <CheckBox fx:id="chkAsesoria"
+                                                                  text="Asesoría"
+                                                                  style="-fx-text-fill: #333333; -fx-cursor: hand;"/>
+
+                                                        <CheckBox fx:id="chkSoporte"
+                                                                  text="Soporte técnico"
+                                                                  style="-fx-text-fill: #333333; -fx-cursor: hand;"/>
+
+                                                        <CheckBox fx:id="chkCapacitacion"
+                                                                  text="Capacitación"
+                                                                  style="-fx-text-fill: #333333; -fx-cursor: hand;"/>
+                                                    </children>
+                                                </FlowPane>
+
+                                                <Label text="Puedes seleccionar más de un servicio."
+                                                       wrapText="true"
+                                                       style="-fx-font-size: 11px; -fx-text-fill: #7986CB; -fx-font-style: italic;"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </VBox>
+
+                        <Label text="Los campos marcados con * son obligatorios."
+                               wrapText="true"
+                               style="-fx-font-size: 12px; -fx-text-fill: #7986CB; -fx-font-style: italic;"/>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox spacing="12.0"
+              alignment="CENTER_RIGHT"
+              style="-fx-background-color: #FFFFFF; -fx-border-color: #E8EAF6; -fx-border-width: 1 0 0 0;">
+
+            <padding>
+                <Insets top="16.0"
+                        right="28.0"
+                        bottom="16.0"
+                        left="28.0"/>
+            </padding>
+
+            <children>
+                <Button text="Cancelar"
+                        onAction="#cancelarRegistro"
+                        prefHeight="40.0"
+                        prefWidth="120.0"
+                        style="-fx-background-color: #FFFFFF; -fx-background-radius: 8; -fx-border-color: #C5CAE9; -fx-border-radius: 8; -fx-text-fill: #5C6BC0; -fx-font-weight: bold; -fx-cursor: hand;"/>
+
+                <Button text="Limpiar"
+                        onAction="#limpiarFormulario"
+                        prefHeight="40.0"
+                        prefWidth="120.0"
+                        style="-fx-background-color: #E8EAF6; -fx-background-radius: 8; -fx-text-fill: #3F51B5; -fx-font-weight: bold; -fx-cursor: hand;"/>
+
+                <Button text="Guardar"
+                        onAction="#guardarCliente"
+                        defaultButton="true"
+                        prefHeight="40.0"
+                        prefWidth="150.0"
+                        style="-fx-background-color: #3F51B5; -fx-background-radius: 8; -fx-text-fill: #FFFFFF; -fx-font-weight: bold; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(63,81,181,0.20), 8, 0.0, 0, 2);"/>
+            </children>
+        </HBox>
+    </bottom>
+
+</BorderPane>
