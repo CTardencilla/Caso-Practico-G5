@@ -15,7 +15,33 @@ import java.io.IOException;
 public class LoginController {
 
     @FXML
-    public void initialize() {
+    private TextField txtUsuario;
 
+    @FXML
+    private PasswordField txtPassword;
+
+    @FXML
+    public void iniciarSesion() {
+
+        String usuario = txtUsuario.getText();
+        String password = txtPassword.getText();
+
+        if (usuario == null || usuario.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error de Valicación", "Por favor, completa los campos solicitados.");
+        }else {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/ni/edu/uam/casopracticog5/view/MainView.fxml"));
+                Parent root = loader.load();
+
+                Stage stageActual = (Stage) txtUsuario.getScene().getWindow();
+                Scene scene = new Scene(root);
+
+                stageActual.setScene(scene);
+                stageActual.setTitle("Ventana Principal");
+                stageActual.show();
+            } catch (IOException e) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Error de Valicación", "No se pudo cargar la ventana principal.");
+            }
+        }
     }
 }
